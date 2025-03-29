@@ -42,10 +42,36 @@ st.sidebar.write("Anouar Ouro-Sao")
 if page == pages[1] :
     st.write("\n\n\n\n\n")
 
-    st.write("Description du BAAC")
+    st.write("### :material/edit_document: Description du BAAC")
+
+    st.write("\n\n")
+
+    with st.expander("**1.** Les forces de l'ordre renseignent les caractéristiques de chaque accident routier", icon=":material/local_police:") :
+        st.write('''
+            Tout usager impliqué dans un accident corporel de la circulation routière survenu sur le réseau routier ouvert à la circulation publique et impliquant au moins un véhicule doit en avertir les forces de l’ordre (gendarmerie nationale, sécurité publique, Préfecture de police de Paris, Compagnie Républicaine de Sécurité - article R 231-1 du code de la route). \n
+            Ces dernières doivent remplir pour chaque accident corporel un Bulletin d’Analyse des Accidents Corporels (BAAC).
+        ''')
+
+    st.write("\n\n\n\n\n")
+    st.write("---")
+
     st.write("Description de la variable gravité")
+
+    st.write("\n\n")
+    st.write("\n\n\n\n\n")
+    st.write("---")
+
     st.write("Signification de chaque gravité au sens du BAAC")
+
+    st.write("\n\n")
+    st.write("\n\n\n\n\n")
+    st.write("---")
+
     st.write("Description de chaque dataset")
+
+    st.write("\n\n")
+    st.write("\n\n\n\n\n")
+    st.write("---")
     
     checkbox_df_selected = st.selectbox("Afficher les caractéristiques de l'un des 4 datasets :", ("df_caracteristiques","df_lieux","df_usagers","df_vehicules"), index=None, placeholder="Sélectionner un dataset")
     if checkbox_df_selected == "df_caracteristiques" :
