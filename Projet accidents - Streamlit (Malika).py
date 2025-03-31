@@ -217,85 +217,132 @@ if page == pages[2] :
             ''')
     
 if page == pages[3] :
-        st.write("\n\n\n\n\n")
+    st.write("\n\n\n\n\n")
 
-        st.write("Après avoir effectué la visualisation, qui nous a permis d’analyser et de comprendre nos données, nous avons pu déterminer notre variable cible ainsi que les variables qui, selon nous, seront pertinentes pour notre Machine Learning.")
-        st.write("Notre objectif est de sélectionner les variables qui ont un lien statistique avec la variable cible.")
+    st.write("Après avoir effectué la visualisation, qui nous a permis d’analyser et de comprendre nos données, nous avons pu déterminer notre variable cible ainsi que les variables qui, selon nous, seront pertinentes pour notre Machine Learning.")
+    st.write("Notre objectif est de sélectionner les variables qui ont un lien statistique avec la variable cible.")
         #st.write(':heavy_check_mark: Supprimer des doublons')
-        st.write("\n")
+    st.write("\n")
 
-        with st.expander("**A.** Supprimer des doublons", icon=":material/heap_snapshot_multiple:") :
-            st.write('''
+    with st.expander("**A.** Supprimer des doublons", icon=":material/heap_snapshot_multiple:") :
+        st.write('''
                 Il y a 2858 lignes en doublons dans le dataset df_usagers. 
 Nous les supprimons car ces doubles lignes vont démultiplier le nombre d’accident dans note dataset final.
             ''')
-            left_co, cent_co,last_co = st.columns(3)
-            with cent_co:
+    left_co, cent_co,last_co = st.columns(3)
+    with cent_co:
                 st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Nombre%20de%20doublon%20dans%20chaque%20dataset%20constituant%20notre%20jeu%20de%20donn%C3%A9e.png", width = 250, caption="Nombre de doublon dans chaque dataset constituant notre jeu de donnée.")
 
 
-        with st.expander("**B.** Modifier le type de la variable « num_acc » du df_usagers", icon=":material/published_with_changes:") :
+    with st.expander("**B.** Modifier le type de la variable « num_acc » du df_usagers", icon=":material/published_with_changes:") :
             st.write('''
                 Le type d’origine de la variable « num_acc » est en float64, contrairement aux « num_acc » des autres dataset. Nous uniformisons la variable en modifiant son type en int64.
             ''')
         
-        with st.expander("**C.** Fusionner les quatre datasets dans un seul DataFrame df_accidents", icon=":material/merge:") :
-            with st.popover("Renommer les quatre colonnes « annee […] » de chaque dataset") :
-                st.write('''
+    with st.expander("**C.** Fusionner les quatre datasets dans un seul DataFrame df_accidents", icon=":material/merge:") :
+        with st.popover("Renommer les quatre colonnes « annee […] » de chaque dataset") :
+            st.write('''
               Nous renommons les variables années de chaque dataset (« annee_caracteristiques », « annee_lieux », « annee_usagers » et « annee_vehicules »)..
            ''')
-            with st.popover("Créer le DataFrame df_accidents en concaténant les quatre datasets") :
+        with st.popover("Créer le DataFrame df_accidents en concaténant les quatre datasets") :
                 st.write('''
              Nous effectuons la fusion en trois temps puisque les clés de jointure ne sont pas identiques)..
            ''')
 
-        with st.expander("**D.** Supprimer les colonnes en doublon (annee_[…], num_veh_[…]) dans le df_accidents", icon=":material/delete:") :
-            with st.popover("Supprimer les colonnes annee_[…] en doublon dans le df_accidents") :
+    with st.expander("**D.** Supprimer les colonnes en doublon (annee_[…], num_veh_[…]) dans le df_accidents", icon=":material/delete:") :
+        with st.popover("Supprimer les colonnes annee_[…] en doublon dans le df_accidents") :
                 st.write('''
               Nous ne conserverons qu’une seule « année » pour notre dataset final. Nous supprimons les colonnes "annee_vehicules", "annee_usagers", "annee_lieux")..
            ''')
-            with st.popover("Supprimer la colonne num_veh_[…] en doublon dans le df_accidents") :
+        with st.popover("Supprimer la colonne num_veh_[…] en doublon dans le df_accidents") :
                 st.write('''
              La fusion a créé un « id_vehicule_y », nous supprimons cette colonne.)..
            ''')
 
-        with st.expander("**E.** Renommer les colonnes annee_[…] et num_veh_[…] dans le df_accidents", icon=":material/signature:") :
+    with st.expander("**E.** Renommer les colonnes annee_[…] et num_veh_[…] dans le df_accidents", icon=":material/signature:") :
             st.write('''
                 Nous effectuons un renommage des colonnes dont le nom à changer ou que nous avons modifié avant la fusion.
 « num_veh_x » redevient « num_veh » et « annee_caracteristiques » devient « annee ».
             ''')
 
-        with st.expander("**F.** Supprimer les lignes du df_accidents pour lesquelles la colonne annee est supérieure ou égale à 2018", icon=":material/delete_history:") :
-            st.write('''
+    with st.expander("**F.** Supprimer les lignes du df_accidents pour lesquelles la colonne annee est supérieure ou égale à 2018", icon=":material/delete_history:") :
+        st.write('''
                 Comme indiqué précédemment, au vue des informations transmises, nous supprimons les données supérieur ou égale à l’année 2018.
             ''')
 
-        with st.expander("**G.** Traitement sur les variables à conserver", icon=":material/construction:") :
-            st.write('''
+    with st.expander("**G.** Traitement sur les variables à conserver", icon=":material/construction:") :
+        st.write('''
                 En complément, du travail effectué sur chaque variable, pour notre analyse sur la temporalité, nous avons créé les variables suivantes : "jour_semaine", "date", "heure". 
 Nous avons également supposé pertinent de créer une variable « age » de l'usager au moment de l'accident.
             ''')          
             #left_co, cent_co,last_co = st.columns(3)
             #with cent_co:
                 #st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Travail%20effectu%C3%A9%20sur%20chaque%20variable.png", width = 350, caption="Pour chaque variable, nous avons effectué le travail suivant")
-            st.markdown("<h6 style='text-align: center; color: grey;'>Pour chaque variable, nous avons effectué le travail suivant : </h6>", unsafe_allow_html=True)
-            st.markdown("<img src='https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Travail%20effectu%C3%A9%20sur%20chaque%20variable.png' width='500' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
-            st.write("\n\n\n\n\n")
+        st.markdown("<h6 style='text-align: center; color: grey;'>Pour chaque variable, nous avons effectué le travail suivant : </h6>", unsafe_allow_html=True)
+        st.markdown("<img src='https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Travail%20effectu%C3%A9%20sur%20chaque%20variable.png' width='500' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
+        st.write("\n\n\n\n\n")
 
 
 
-        with st.expander("**H.** Variables conservées", icon=":material/dataset:") :
-            st.write('''
+    with st.expander("**H.** Variables conservées", icon=":material/dataset:") :
+        st.write('''
                 Pour donner suite à notre analyse lors de la visualisation, nous décidons de supprimer les colonnes non pertinentes pour les modèles dans le df_accidents. 
             ''')
             
             #st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Variables%20conserv%C3%A9s.png", width = 500, caption="Après la suppression notre dataset df_accidents est composé des colonnes suivantes ")
-            st.markdown("<h6 style='text-align: center; color: grey;'>Après la suppression notre dataset df_accidents est composé des colonnes suivantes : </h6>", unsafe_allow_html=True)
-            st.markdown("<img src='https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Variables%20conserv%C3%A9s.png' width='500' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
-            st.write("\n\n\n\n\n")
+        st.markdown("<h6 style='text-align: center; color: grey;'>Après la suppression notre dataset df_accidents est composé des colonnes suivantes : </h6>", unsafe_allow_html=True)
+        st.markdown("<img src='https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Variables%20conserv%C3%A9s.png' width='500' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
+        st.write("\n\n\n\n\n")
 
-#if page == pages[5] :
+if page == pages[5] :
 
+#Titre 1
+    st.write("### :material/precision_manufacturing: : Quel modèle est le plus performant ?")
+
+    with st.expander("**1.** Modèle CatBoostClassifier avec hyper paramètres : itérations = 500 et learning_rate = 0.1:", icon=":material/lightbulb_circle:") :
+        st.write('''
+                Ce modèle semble le plus performant en termes de score de test et recall. Bien qu’il représente un légèrement meilleur score d’entrainement (0,673), il ne souffre pas d’overfitting important, ce qui est bon signe de généralisation.
+            ''')
+
+    with st.expander("**2.** Modèle CatBoostClassifier avec hyper paramètres : itérations = 1000 et learning_rate =0,01", icon=":material/lightbulb:") :
+        st.write('''
+                Ce modèle est également assez bon en termes de généralisation, mais il ne surpasse pas le premier en terme de recall ou d’accuracy, bien que le recall (0,479) reste assez proche de celui du deuxième modèle.
+            ''')  
+
+#Titre 2
+    st.write("### :material/all_inclusive: : Meilleur choix ?")
+    st.write('''
+                La recherche d’un modèle de Machine Learning performant est un juste équilibre à trouver entre un overfitting le plus faible possible, et un recall le plus élevé possible. En jouant avec les hyperparamètres nous avons su réduire l’overfitting, au profit d’un recall plus faible que lors de la première itération sur nos différents modèles.\n
+Malheureusement, nous n’avons pas su trouver les bons paramètres afin d’augmenter la valeur du recall, ce qui fait du modèle choisi un modèle de prédiction peu performant.
+            ''')  
+    
+#Titre 3
+    st.write("### :material/work_history: : Feature Importance")
+
+    st.write("\n\n")
+
+    with st.expander("**1.** DécisionTreeClassifier/RandomForestClassifier:", icon=":material/forest:") :
+        col1, col2 = st.columns(2, gap="small")
+
+        with col1 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/D%C3%A9cisionTreeClassifier.png", width = 350, caption="DecisionTreeClassifier - Max_Depth=10 ")
+        with col2 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/RandomForestClassifier.png", width = 350, caption="RandomForestClassifier - Max_Depth=8")
+
+    st.write("\n\n")
+
+    with st.expander("**1.** CatBoostClassier:", icon=":material/pets:") :
+        col1, col2 = st.columns(2, gap="small")
+
+        with col1 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/CatBoostClassifier%20500.png", width = 350, caption="CatBoostClassifier - Learning_rate=0.1 et Iterations=500")
+        with col2 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/CatBoostClassifier%201000.png", width = 350, caption="CatBoostClassifier - Learning_rate=0.01 et Iterations=1000")
+
+#Titre 4
+    st.write("### :material/emoji_objects: : Pistes pour améliorer les résultats de notre Machine Learning")
+
+    st.write("\n\n")
 
 
 
