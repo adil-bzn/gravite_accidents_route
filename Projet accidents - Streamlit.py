@@ -149,8 +149,12 @@ if page == pages[1] :
 
     st.write("\n")
 
-    checkbox_df_selected = st.selectbox("**Afficher les caractéristiques de l'un des 4 datasets :**", ("df_caracteristiques","df_lieux","df_usagers","df_vehicules"), index=None, placeholder="Sélectionner un dataset")
+    st.write("**:material/search: Afficher les premières lignes de l'un des 4 datasets :**")
+
+    checkbox_df_selected = st.selectbox("", ("df_caracteristiques","df_lieux","df_usagers","df_vehicules"), index=None, placeholder="Sélectionner un dataset", label_visibility="collapsed")
+    st.write("\n")
     if checkbox_df_selected == "df_caracteristiques" :
+        
         st.dataframe(df_caracteristiques.head(5))
 
     if checkbox_df_selected == "df_lieux" :
@@ -164,22 +168,46 @@ if page == pages[1] :
 
     st.write("---")
 
-    st.write("Explication sur le choix de supprimer les années >= à 2018")
+    st.write("### :material/fit_screen: Réduction de la profondeur des données")
+
+    st.write("\n\n")
+
+    with st.expander("Nous ne conservons que les accidents entre 2005 et 2017, soit 12 ans d'historique", icon=":material/delete_history:") :
+        st.write('''
+            Lors du lancement de notre projet Fil Rouge, nous avons pris la décision de prendre la base de 
+            données contenant la totalité des informations de 2005 à 2021 pour chacun des 4 fichiers 
+            (Caractéristiques – Lieux – Véhicules – Usagers) au format CSV. \n
+            Nous avons fait le choix de conserver les données sur les 12 premières années (2005 à 2017) pour 
+            chaque fichier puisque le document de description des bases de données annuelles des accidents, mis 
+            à notre disposition par L' Observatoire national interministériel de la sécurité routière, nous apporte 
+            cet avertissement :\n
+            « *Les données sur la qualification de blessé hospitalisé depuis l’année 2018 ne pouvant être comparées 
+            aux années précédentes suite à des modifications de process de saisie des forces de l’ordre. L’indicateur 
+            « blessé hospitalisé » n’est plus labellisé par l’autorité de la statistique publique depuis 2019.
+            A partir des données de 2021, les usagers en fuite ont été rajoutés, cela entraîne des manques 
+            d’informations sur ces derniers, notamment le sexe, l’âge, voire la gravité des blessures 
+            (indemne,blessé léger ou blessé hospitalisé).* ». \n
+            Nous supprimons donc toutes les lignes dont les accidents sont enregistrés à partir de 2018.
+        ''')
 
     st.write("---")
 
-    st.write("Relever la présence de doublon dans le df_usagers")
-    
-    df_usagers=df_usagers.drop_duplicates(keep="first")
+    st.write("### :material/join_left: Jointure entre les 4 fichiers")
+
+    st.write("\n\n")
+
+    st.write("Notre phase d'exploration nous a permis de mettre la main sur la/le(s) clé(s) primaire(s) de chaque fichier :")
+    st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Tables%20et%20jointures.png", caption="Jointure entre les 4 tables (fichiers CSV) mises à notre disposition.")
+
+    st.write("**:material/info:** ***Il faudra être vigilant sur les clés primaires et faire un examen approfondi de la qualité de ces données. Les critères d'unicité, la similarité des formats de données, et le type de jointure choisi sont des critères primordiaux pour une fusion sans doublons ou pertes de données.***")
 
     st.write("---")
 
-    st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Tables%20et%20jointures.png",width=400)
-    st.write("Expliquer la méthodologie de jointure")
+    st.write("### :material/explore: Pour pousser l'exploration encore plus loin...")
 
-    st.write("---")
+    st.write("\n\n")
 
-    st.write("Mise à disposition du dictionnaire de chaque variable")
+    st.write("Notre phase d'exploration nous a permis de mettre la main sur la description de chacune des variables. Nous proposons une synthèse dans le tableau ci-après, avec la définition de chaque valeur.")
     st.dataframe(df_description_variables, hide_index=True)
 
 if page == pages[2] :
@@ -722,13 +750,13 @@ if page == pages[3] :
             ''')
         with st.popover("Créer le DataFrame df_accidents en concaténant les quatre datasets") :
             st.write('''
-                Nous effectuons la fusion en trois temps puisque les clés de jointure ne sont pas identiques)..
+                Nous effectuons la fusion en trois temps puisque les clés de jointure ne sont pas identiques).
             ''')
 
     with st.expander("**D.** Supprimer les colonnes en doublon (annee_[…], num_veh_[…]) dans le df_accidents", icon=":material/delete:") :
         with st.popover("Supprimer les colonnes annee_[…] en doublon dans le df_accidents") :
             st.write('''
-                Nous ne conserverons qu’une seule « année » pour notre dataset final. Nous supprimons les colonnes "annee_vehicules", "annee_usagers", "annee_lieux")..
+                Nous ne conserverons qu’une seule « année » pour notre dataset final. Nous supprimons les colonnes "annee_vehicules", "annee_usagers", "annee_lieux").
             ''')
         with st.popover("Supprimer la colonne num_veh_[…] en doublon dans le df_accidents") :
             st.write('''
