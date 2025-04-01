@@ -299,7 +299,7 @@ if page == pages[5] :
 #Titre 1
     st.write("### :material/precision_manufacturing: : Quel modèle est le plus performant ?")
 
-    with st.expander("**1.** Modèle CatBoostClassifier avec hyper paramètres : itérations = 500 et learning_rate = 0.1:", icon=":material/lightbulb_circle:") :
+    with st.expander("**1.** Modèle CatBoostClassifier avec hyper paramètres : itérations = 500 et learning_rate = 0.1", icon=":material/lightbulb_circle:") :
         st.write('''
                 Ce modèle semble le plus performant en termes de score de test et recall. Bien qu’il représente un légèrement meilleur score d’entrainement (0,673), il ne souffre pas d’overfitting important, ce qui est bon signe de généralisation.
             ''')
@@ -321,30 +321,66 @@ Malheureusement, nous n’avons pas su trouver les bons paramètres afin d’aug
 
     st.write("\n\n")
 
-    with st.expander("**1.** DécisionTreeClassifier/RandomForestClassifier:", icon=":material/forest:") :
+    with st.expander("**1.** DécisionTreeClassifier/RandomForestClassifier :", icon=":material/forest:") :
         col1, col2 = st.columns(2, gap="small")
 
         with col1 :
-            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/D%C3%A9cisionTreeClassifier.png", width = 350, caption="DecisionTreeClassifier - Max_Depth=10 ")
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/D%C3%A9cisionTreeClassifier.png", width = 400, caption="DecisionTreeClassifier - Max_Depth=10 ")
         with col2 :
-            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/RandomForestClassifier.png", width = 350, caption="RandomForestClassifier - Max_Depth=8")
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/RandomForestClassifier.png", width = 400, caption="RandomForestClassifier - Max_Depth=8")
 
     st.write("\n\n")
 
-    with st.expander("**1.** CatBoostClassier:", icon=":material/pets:") :
+    with st.expander("**2.** CatBoostClassier :", icon=":material/pets:") :
         col1, col2 = st.columns(2, gap="small")
 
         with col1 :
-            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/CatBoostClassifier%20500.png", width = 350, caption="CatBoostClassifier - Learning_rate=0.1 et Iterations=500")
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/CatBoostClassifier%20500.png", width = 400, caption="CatBoostClassifier - Learning_rate=0.1 et Iterations=500")
         with col2 :
-            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/CatBoostClassifier%201000.png", width = 350, caption="CatBoostClassifier - Learning_rate=0.01 et Iterations=1000")
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/CatBoostClassifier%201000.png", width = 400, caption="CatBoostClassifier - Learning_rate=0.01 et Iterations=1000")
 
 #Titre 4
     st.write("### :material/emoji_objects: : Pistes pour améliorer les résultats de notre Machine Learning")
 
     st.write("\n\n")
 
+    with st.expander("**1.** Il existe des variables dans le dataset qui sont plus corrélées à la variable cible que les variables sélectionnées :", icon=":material/variable_insert:") :
+        st.write('''
+                La lecture du recall nous laisse à penser que si le modèle est performant sur certaines classes c’est que nous n’avons pas choisi des variables saillantes permettant de mieux catégoriser la gravité des accidents.
+            ''')
 
+    with st.expander("**2.** Les hyperparamètres des modèles : ", icon=":material/online_prediction:") :
+        st.write('''
+                Nous avons manqué de temps pour étudier l’ensemble des hyperparamètres des modèles pour essayer d’améliorer notre modèle. La compréhension des hyperparamètres est une étape importante pour jouer sur les résultats.
+            ''')  
 
- # st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Densit%C3%A9%20de%20population%20par%20d%C3%A9partement.png", width = 400, caption="Les 10 départements avec la plus forte et la plus faible densité de population.")
+    with st.expander("**3.** Modifier la méthodologie de travail :", icon=":material/tactic:") :
+        st.write('''
+                Après réflexion, nous pensons qu’il aurait fallu avoir une approche différente sur notre modélisation. Nous aurions dû lancer nos modèles sans hyperparamètres et jouer avec RandomSearch et GridSearch pour approcher, puis trouver, les meilleurs paramètres à appliquer sur nos modèles
+            ''')
+        
+#Titre 4
+    st.write("### :material/search: : Conclusion : ")
 
+    st.write("\n\n")      
+
+    st.write('''
+             
+        La gravité des accidents de la route en France est un sujet de préoccupation national, tant pour les autorités, les citoyens et les associations de prévention routière.\n
+        La gravité de ceux-ci est dû à plusieurs facteurs :\n
+        •	La vitesse excessive\n
+        •	L’alcool\n
+        •	La drogue\n
+        •	La fatigue\n
+        •	Le non-respect du code la route\n
+        •	Les comportements irresponsables\n
+        Dans les données communiquées par l’Observatoire national interministériel de la sécurité routière, certaines données ne sont pas communiquées comme l’alcool, la drogue, et la vitesse au moment de l’accident.\n
+        Nous pensons que ces dimensions auraient pu apporter des résultats encore plus probants puisqu’ils ont lié fortement à la gravité des accidents d’après les statistiques de la sécurité routière.\n
+        L’accidentologie est un enjeu de santé publique majeur, et chaque année le gouvernement tente d'enrayer la propagation d'accident en cherchant des solutions.
+        Il est important de continuer à investir sur la compréhension des phénomènes des accidents et des leurs liens avec la gravité pour adapter l’urbanisme, et sensibiliser la population afin d’enrayer ce fléau qui a encore causé 3.431 décès sur les routes en France Métropolitaine ou d’Outre-Mer.
+             
+            ''')  
+    
+   # url = "https://www.onisr.securite-routiere.gouv.fr/etat-de-linsecurite-routiere/bilans-annuels-de-la-securite-routiere/bilan-2024-de-la-securite-routiere"
+    #st.write("check out this [link](%s)" % url)
+    
