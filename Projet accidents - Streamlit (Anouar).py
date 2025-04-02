@@ -301,6 +301,8 @@ if page == pages[4] :
     from sklearn.metrics import accuracy_score, recall_score, f1_score, classification_report
     import streamlit as st
     from sklearn.model_selection import train_test_split
+    import requests
+    from io import BytesIO
 
     #Créer 6 sections dans la page
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["Overview","Random Forest Classifier", "Decision Tree Classifier", "CatBoost Classifier", "Démo"])
@@ -353,7 +355,7 @@ if page == pages[4] :
                     Pour chaque modèle que nous allons lancer, nous séparons le jeu de données en un jeu de test pour ***20%***  et un jeu d’entrainement pour ***80%*** selon la formule suivante :
                 ''')
             st.code("X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)", language="python")
-            
+
     with tab2 :
         st.write('')
         with st.expander("Défintiion", icon=":material/dataset:") :
@@ -513,63 +515,64 @@ if page == pages[4] :
         # Séparation en données d'entraînement et de test
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-        # Chemins des modèles pré-entrainés
-        model_RF_0 = r"C:\Users\anoua\Downloads\accidents-routes-cda\Joblibs\RF_0.joblib"
-        model_RF_5 = r"C:\Users\anoua\Downloads\accidents-routes-cda\Joblibs\RF_5.joblib"
-        model_RF_6 = r"C:\Users\anoua\Downloads\accidents-routes-cda\Joblibs\RF_6.joblib"
-        model_RF_7 = r"C:\Users\anoua\Downloads\accidents-routes-cda\Joblibs\RF_7.joblib"
-        model_RF_8 = r"C:\Users\anoua\Downloads\accidents-routes-cda\Joblibs\RF_8.joblib"
+        #Chemins des modèles pré-entrainés
+        model_RF_0 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/RF_5.joblib"
+        model_RF_5 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/RF_5.joblib"
+        model_RF_6 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/RF_6.joblib"
+        model_RF_7 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/RF_7.joblib"
+        model_RF_8 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/RF_8.joblib"
 
-        model_DT_0 = r"C:\Users\anoua\Downloads\accidents-routes-cda\Joblibs\DT_0.joblib"
-        model_DT_5 = r"C:\Users\anoua\Downloads\accidents-routes-cda\Joblibs\DT_5.joblib"
-        model_DT_6 = r"C:\Users\anoua\Downloads\accidents-routes-cda\Joblibs\DT_6.joblib"
-        model_DT_7 = r"C:\Users\anoua\Downloads\accidents-routes-cda\Joblibs\DT_7.joblib"
-        model_DT_8 = r"C:\Users\anoua\Downloads\accidents-routes-cda\Joblibs\DT_8.joblib"
+        model_DT_0 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/DT_5.joblib"
+        model_DT_5 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/DT_5.joblib"
+        model_DT_6 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/DT_6.joblib"
+        model_DT_7 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/DT_7.joblib"
+        model_DT_8 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/DT_8.joblib"
 
-        # Fonction pour charger le modèle selon le choix de l'utilisateur
+        #Fonction pour charger le modèle selon le choix de l'utilisateur
         def modele_machine_learning(model, profondeur):
-            try :
-                if model == 'Random Forest Classifier':
-                    if profondeur == 0:
-                        return joblib.load(model_RF_0)
-                    elif profondeur == 5:
-                        return joblib.load(model_RF_5)
-                    elif profondeur == 6:
-                        return joblib.load(model_RF_6)
-                    elif profondeur == 7:
-                        return joblib.load(model_RF_7)
-                    elif profondeur == 8:
-                        return joblib.load(model_RF_8)
-                elif model == 'Decision Tree Classifier':
-                    if profondeur == 0:
-                        return joblib.load(model_DT_0)
-                    elif profondeur == 5:
-                        return joblib.load(model_DT_5)
-                    elif profondeur == 6:
-                        return joblib.load(model_DT_6)
-                    elif profondeur == 7:
-                        return joblib.load(model_DT_7)
-                    elif profondeur == 8:
-                        return joblib.load(model_DT_8)
-            except KeyError:
-                st.write("Le modèle CatBoost n'est pas encore implémenté.")
-                return None
-            except Exception as e:
-                st.write("Erreur lors du chargement du modèle :", e)
-                return None
-
-
+           try :
+               if model == "Random Forest Classifier":
+                   if profondeur == 0:
+                       return joblib.load(BytesIO(requests.get(model_RF_0).content))
+                   elif profondeur == 5:
+                       return joblib.load(BytesIO(requests.get(model_RF_5).content))
+                   elif profondeur == 6:
+                       return joblib.load(BytesIO(requests.get(model_RF_6).content))
+                   elif profondeur == 7:
+                       return joblib.load(BytesIO(requests.get(model_RF_7).content))
+                   elif profondeur == 8:
+                       return joblib.load(BytesIO(requests.get(model_RF_8).content))
+               elif model == "Decision Tree Classifier":
+                   if profondeur == 0:
+                       return joblib.load(BytesIO(requests.get(model_DT_0).content))
+                   elif profondeur == 5:
+                       return joblib.load(BytesIO(requests.get(model_DT_5).content))
+                   elif profondeur == 6:
+                       return joblib.load(BytesIO(requests.get(model_DT_6).content))
+                   elif profondeur == 7:
+                       return joblib.load(BytesIO(requests.get(model_DT_7).content))
+                   elif profondeur == 8:
+                       return joblib.load(BytesIO(requests.get(model_DT_8).content))
+               elif model == "CatBoost Classifier":
+                   st.write("Le modèle CatBoost n'est pas encore implémenté")
+                   return None
+           except KeyError:
+               st.write('')
+               return None
+           except Exception as e:
+               st.write("Erreur lors du chargement du modèle :", e)
+               return None
+            
         # Fonction pour calculer les scores sur les données d'entraînement
         def train_scores(model, metrique):
-            y_pred = model.predict(X_train)
-            
-            if metrique == 'Accuracy':
+            y_pred = model.predict(X_train)  
+            if metrique == "Accuracy":
                 return accuracy_score(y_train, y_pred)
-            elif metrique == 'Recall':
-                return recall_score(y_train, y_pred, average='macro')
-            elif metrique == 'F1-score':
+            elif metrique == "Recall":
+                return recall_score(y_train, y_pred, average="macro")
+            elif metrique == "F1-score":
                 return f1_score(y_train, y_pred, average='macro')
-            elif metrique == 'Classification Report':
+            elif metrique == "Classification Report":
                 return classification_report(y_train, y_pred)
             else:
                 return "Métrique invalide"
@@ -578,46 +581,45 @@ if page == pages[4] :
         # Fonction pour calculer les scores sur les données de test
         def test_scores(model, metrique):
             y_pred = model.predict(X_test)
-            
-            if metrique == 'Accuracy':
+            if metrique == "Accuracy":
                 return accuracy_score(y_test, y_pred)
-            elif metrique == 'Recall':
-                return recall_score(y_test, y_pred, average='macro')
-            elif metrique == 'F1-score':
+            elif metrique == "Recall":
+                return recall_score(y_test, y_pred, average="macro")
+            elif metrique == "F1-score":
                 return f1_score(y_test, y_pred, average='macro')
-            elif metrique == 'Classification Report':
+            elif metrique == "Classification Report":
                 return classification_report(y_test, y_pred)
             else:
                 return "Métrique invalide"
 
 
         # Interface Streamlit
-        choix_modele = ['Random Forest Classifier', 'Decision Tree Classifier', 'CatBoost Classifier']
-        modele_choisi = st.selectbox("Choisissez un modèle de Machine Learning", choix_modele)
-        st.write('Le modèle choisi est :', modele_choisi)
-
-        profondeur_choisi = st.slider("Choisissez une profondeur (max_depth) pour le modèle", 5, 8)
-        st.write("Vous avez choisi une profondeur de :", profondeur_choisi)
+        left_co, cent_co,last_co = st.columns(3)
+        with left_co:
+            choix_modele = ["Random Forest Classifier", "Decision Tree Classifier"]
+            modele_choisi = st.selectbox("Choisissez un modèle de Machine Learning :", choix_modele)
+            st.write("Vous avez choisi le modèle ", modele_choisi)
+            st.write('')
+            st.write('')
+            profondeur_choisi = st.slider("Choisissez une profondeur (max_depth) pour votre modèle :", 5, 8)
+            st.write("Vous avez choisi une profondeur de :", profondeur_choisi)
 
         # Charger le modèle sélectionné
         model = modele_machine_learning(modele_choisi, profondeur_choisi)
 
         # Choisir la métrique à afficher
-        display = st.radio('Quelle métrique souhaitez-vous afficher ?', ('Accuracy', 'Recall', 'F1-score', 'Classification Report'))
+        display = st.radio("Quelle métrique souhaitez-vous afficher ?", ("Accuracy", "Recall", "F1-score", "Classification Report"))
 
         if model:  # Si un modèle est chargé
-            if display == 'Accuracy':
-                st.write("Score d'entraînement:", train_scores(model, display))
-                st.write("Score de test:", test_scores(model, display))
-            elif display == 'Recall':
+            if display == "Accuracy":
+                st.write("Score sur le jeu d'entrainement :", train_scores(model, display))
+                st.write("Score sur le jeu de test :", test_scores(model, display))
+            elif display == "Recall":
                 #st.write("Score d'entraînement:", train_scores(model, display))
-                st.write("Score de test:", test_scores(model, display))
-            elif display == 'F1-score':
+                st.write("Recall :", test_scores(model, display))
+            elif display == "F1-score":
                 #st.write("Score d'entraînement:", train_scores(model, display))
-                st.write("Score de test:", test_scores(model, display))
-            elif display == 'Classification Report':
+                st.write("F1-score :", test_scores(model, display))
+            elif display == "Classification Report":
                 #st.text(train_scores(model, display))
                 st.text(test_scores(model, display))
-
- # st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Densit%C3%A9%20de%20population%20par%20d%C3%A9partement.png", width = 400, caption="Les 10 départements avec la plus forte et la plus faible densité de population.")
-
