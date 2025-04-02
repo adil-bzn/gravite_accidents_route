@@ -10,28 +10,45 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
+import requests
+from io import BytesIO
 
-#Chargement des datasets
-caracteristiques = r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\caracteristiques.csv"
-lieux = r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\lieux.csv"
-usagers = r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\usagers.csv"
-vehicules = r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\vehicules.csv"
-description_variables = r"C:\Users\adilb\Downloads\Projets accidents - Description des variables.xlsx"
-df_caracteristiques = pd.read_csv(caracteristiques, encoding = "ISO-8859-1", index_col=0)
-df_lieux = pd.read_csv(lieux, encoding = "ISO-8859-1",index_col=0)
-df_usagers = pd.read_csv(usagers, encoding = "ISO-8859-1",index_col=0)
-df_vehicules = pd.read_csv(vehicules, encoding = "ISO-8859-1",index_col=0)
-df_description_variables = pd.read_excel(description_variables)
+@st.cache_data
+def charger_datasets():
 
-#Titre du streamlit
+    df_caracteristiques=pd.read_csv(r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\caracteristiques.csv", encoding = "ISO-8859-1",index_col=0)
+    df_lieux = pd.read_csv(r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\lieux.csv", encoding = "ISO-8859-1",index_col=0)
+    df_usagers = pd.read_csv(r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\usagers.csv", encoding = "ISO-8859-1",index_col=0)
+    df_vehicules = pd.read_csv(r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\vehicules.csv", encoding = "ISO-8859-1",index_col=0)
+    df_description_variables = pd.read_excel(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx").content))
+    return df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables
+
 st.set_page_config(layout="wide")
 st.title("Prédiction de la gravité des accidents :collision:")
+
+df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables = charger_datasets()
+
+#Chargement des datasets
+#caracteristiques = r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\caracteristiques.csv"
+#lieux = r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\lieux.csv"
+#usagers = r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\usagers.csv"
+#vehicules = r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\vehicules.csv"
+#description_variables = r"C:\Users\adilb\Downloads\Projets accidents - Description des variables.xlsx"
+#df_caracteristiques = pd.read_csv(caracteristiques, encoding = "ISO-8859-1", index_col=0)
+#df_lieux = pd.read_csv(lieux, encoding = "ISO-8859-1",index_col=0)
+#df_usagers = pd.read_csv(usagers, encoding = "ISO-8859-1",index_col=0)
+#df_vehicules = pd.read_csv(vehicules, encoding = "ISO-8859-1",index_col=0)
+#df_description_variables = pd.read_excel(description_variables)
+
+#Titre du streamlit
+#st.set_page_config(layout="wide")
+#st.title("Prédiction de la gravité des accidents :collision:")
 
 #Configuration bandeau gauche de la page
     #Sommaire et navigation
 st.sidebar.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/DataScientest.png")
 st.sidebar.title("Sommaire")
-pages=["Contexte", "Exploration", "Data Visualisation", "Pre-processing", "Modélisation", "Conclusion"]
+pages=["Introduction & Exploration", "Data Visualisation", "Pre-processing", "Modélisation", "Conclusion"]
 page=st.sidebar.radio("Aller vers", pages)
     #Auteurs
 st.sidebar.title("Auteurs :")
@@ -43,27 +60,31 @@ if page == pages[0] :
 
     st.write("\n\n\n\n\n")
 
-    with st.expander("**A.** Contexte", icon=":material/contextual_token:") :
-        st.write('''
+    st.write("### :material/contextual_token: Contexte")
+    
+    st.write("\n\n")
+
+    st.write('''
             L’Observatoire national interministériel de la sécurité routière met à disposition chaque année depuis 2005, des Bases de données annuelles des accidents corporels de la circulation routière. \n
             Les bases de données, extraites du fichier BAAC, répertorient l'intégralité des accidents corporels de la circulation, intervenus durant une année précise en France métropolitaine, dans les départements d’Outre-mer (Guadeloupe, Guyane, Martinique, La Réunion et Mayotte depuis 2012) et dans les autres territoires d’outre-mer(Saint-Pierre-et-Miquelon, Saint-Barthélemy, Saint-Martin, Wallis-et-Futuna, Polynésie française et Nouvelle-Calédonie. 
         ''')
 
-    st.write("\n\n\n\n\n")
     st.write("---")
 
-    with st.expander("**B.** Objectifs", icon=":material/flag:") :
-        st.write('''
-            L’objectif de ce projet est de prédire la gravité des accidents routiers en France. \n
-            La première étape sera d’opérer une exploration des différentes données présentes dans notre dataset. \n
-            La seconde étape sera de mettre nos données en visualisation pour mieux comprendre le sujet étudié, ainsi que leur corrélation avec la variable cible de gravité. \n
-            Il faudra ensuite appliquer les méthodes étudiées pendant notre cursus pour nettoyer le jeu de données. \n
-            Nous créerons ensuite un modèle prédictif qui permettra d’anticiper la gravité des accidents en fonction des variables que l’on aura sélectionnés au préalable.
+    st.write("### :material/flag: Objectifs")
+    
+    st.write("\n\n")
 
-        ''')
+    st.write('''
+        L’objectif de ce projet est de prédire la gravité des accidents routiers en France. \n
+        La première étape sera d’opérer une exploration des différentes données présentes dans notre dataset. \n
+        La seconde étape sera de mettre nos données en visualisation pour mieux comprendre le sujet étudié, ainsi que leur corrélation avec la variable cible de gravité. \n
+        Il faudra ensuite appliquer les méthodes étudiées pendant notre cursus pour nettoyer le jeu de données. \n
+        Nous créerons ensuite un modèle prédictif qui permettra d’anticiper la gravité des accidents en fonction des variables que l’on aura sélectionnés au préalable.
 
-if page == pages[1] :
-    st.write("\n\n\n\n\n")
+    ''')
+
+    st.write("---")
 
     st.write("### :material/edit_document: Description du BAAC")
 
@@ -210,7 +231,7 @@ if page == pages[1] :
     st.write("Notre phase d'exploration nous a permis de mettre la main sur la description de chacune des variables. Nous proposons une synthèse dans le tableau ci-après, avec la définition de chaque valeur.")
     st.dataframe(df_description_variables, hide_index=True)
 
-if page == pages[2] :
+if page == pages[1] :
 
     #Créer 6 sections dans la page
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([":earth_americas: Localisation ", ":motorway: Route", ":partly_sunny: Condition extérieure", ":clock9: Temporalité", ":family: Humain", ":car: Véhicule"])
@@ -719,7 +740,7 @@ if page == pages[2] :
                 peu de carénage qui les protègent.
             ''')
 
-if page == pages[3] :
+if page == pages[2] :
 
     st.write("\n\n\n\n\n")
 
@@ -778,10 +799,7 @@ if page == pages[3] :
         st.write('''
             En complément, du travail effectué sur chaque variable, pour notre analyse sur la temporalité, nous avons créé les variables suivantes : "jour_semaine", "date", "heure". 
             Nous avons également supposé pertinent de créer une variable « age » de l'usager au moment de l'accident.
-        ''')          
-        #left_co, cent_co,last_co = st.columns(3)
-        #with cent_co:
-            #st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Travail%20effectu%C3%A9%20sur%20chaque%20variable.png", width = 350, caption="Pour chaque variable, nous avons effectué le travail suivant")
+        ''')
         st.markdown("<h6 style='text-align: center; color: grey;'>Pour chaque variable, nous avons effectué le travail suivant : </h6>", unsafe_allow_html=True)
         st.markdown("<img src='https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Travail%20effectu%C3%A9%20sur%20chaque%20variable.png' width='500' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
         st.write("\n\n\n\n\n")
@@ -792,8 +810,99 @@ if page == pages[3] :
         st.write('''
             Pour donner suite à notre analyse lors de la visualisation, nous décidons de supprimer les colonnes non pertinentes pour les modèles dans le df_accidents. 
         ''')
-        
-        #st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Variables%20conserv%C3%A9s.png", width = 500, caption="Après la suppression notre dataset df_accidents est composé des colonnes suivantes ")
         st.markdown("<h6 style='text-align: center; color: grey;'>Après la suppression notre dataset df_accidents est composé des colonnes suivantes : </h6>", unsafe_allow_html=True)
         st.markdown("<img src='https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Variables%20conserv%C3%A9s.png' width='500' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
         st.write("\n\n\n\n\n")
+
+if page == pages[4] :
+
+    st.write("\n\n\n\n\n")
+
+    st.write("### :material/precision_manufacturing: Quel modèle est le plus performant ?")
+
+    st.write("\n\n")
+
+    with st.expander("**1.** Modèle CatBoostClassifier avec hyper paramètres : itérations = 500 et learning_rate = 0.1", icon=":material/lightbulb_circle:") :
+        st.write('''
+                Ce modèle semble le plus performant en termes de score de test et recall. Bien qu’il représente un légèrement meilleur score d’entrainement (0,673), il ne souffre pas d’overfitting important, ce qui est bon signe de généralisation.
+            ''')
+
+    with st.expander("**2.** Modèle CatBoostClassifier avec hyper paramètres : itérations = 1000 et learning_rate =0,01", icon=":material/lightbulb:") :
+        st.write('''
+                Ce modèle est également assez bon en termes de généralisation, mais il ne surpasse pas le premier en terme de recall ou d’accuracy, bien que le recall (0,479) reste assez proche de celui du deuxième modèle.
+            ''')  
+
+    st.write("---")
+
+    st.write("### :material/all_inclusive: Meilleur choix ?")
+
+    st.write("\n\n")
+
+    st.write('''
+        La recherche d’un modèle de Machine Learning performant est un juste équilibre à trouver entre un overfitting le plus faible possible, et un recall le plus élevé possible. En jouant avec les hyperparamètres nous avons su réduire l’overfitting, au profit d’un recall plus faible que lors de la première itération sur nos différents modèles.\n
+        Malheureusement, nous n’avons pas su trouver les bons paramètres afin d’augmenter la valeur du recall, ce qui fait du modèle choisi un modèle de prédiction peu performant.
+    ''')  
+    
+    st.write("---")
+
+    st.write("### :material/work_history: Feature Importance")
+
+    st.write("\n\n")
+
+    with st.popover("Dictionnaire des variables", icon=":material/dictionary:") :
+            st.dataframe(df_description_variables, hide_index=True)
+
+    with st.expander("**1.** DécisionTreeClassifier/RandomForestClassifier", icon=":material/forest:") :
+        col1, col2 = st.columns(2, gap="small")
+        with col1 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/D%C3%A9cisionTreeClassifier.png", width = 500, caption="DecisionTreeClassifier - Max_Depth=10 ")
+        with col2 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/RandomForestClassifier.png", width = 500, caption="RandomForestClassifier - Max_Depth=8")
+
+    with st.expander("**2.** CatBoostClassier", icon=":material/pets:") :
+        col1, col2 = st.columns(2, gap="small")
+        with col1 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/CatBoostClassifier%20500.png", width = 500, caption="CatBoostClassifier - Learning_rate=0.1 et Iterations=500")
+        with col2 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/CatBoostClassifier%201000.png", width = 500, caption="CatBoostClassifier - Learning_rate=0.01 et Iterations=1000")
+
+    st.write("---")
+
+    st.write("### :material/emoji_objects: Pistes pour améliorer les résultats de notre Machine Learning")
+
+    st.write("\n\n")
+
+    with st.expander("**1.** Il existe des variables dans le dataset qui sont plus corrélées à la variable cible que les variables sélectionnées", icon=":material/variable_insert:") :
+        st.write('''
+                La lecture du recall nous laisse à penser que si le modèle est performant sur certaines classes c’est que nous n’avons pas choisi des variables saillantes permettant de mieux catégoriser la gravité des accidents.
+            ''')
+
+    with st.expander("**2.** Les hyperparamètres des modèles", icon=":material/online_prediction:") :
+        st.write('''
+                Nous avons manqué de temps pour étudier l’ensemble des hyperparamètres des modèles pour essayer d’améliorer notre modèle. La compréhension des hyperparamètres est une étape importante pour jouer sur les résultats.
+            ''')  
+
+    with st.expander("**3.** Modifier la méthodologie de travail", icon=":material/tactic:") :
+        st.write('''
+                Après réflexion, nous pensons qu’il aurait fallu avoir une approche différente sur notre modélisation. Nous aurions dû lancer nos modèles sans hyperparamètres et jouer avec RandomSearch et GridSearch pour approcher, puis trouver, les meilleurs paramètres à appliquer sur nos modèles
+            ''')
+        
+    st.write("---")
+
+    st.write("### :material/search: Conclusion")
+
+    st.write("\n\n")      
+
+    st.write('''  
+        La gravité des accidents de la route en France est un sujet de préoccupation national, tant pour les autorités, les citoyens et les associations de prévention routière.\n
+        La gravité de ceux-ci est dû à plusieurs facteurs :\n
+        * La vitesse excessive\n
+        * L’alcool\n
+        * La drogue\n
+        * La fatigue\n
+        * Le non-respect du code la route\n
+        Dans les données communiquées par l’Observatoire national interministériel de la sécurité routière, certaines données ne sont pas communiquées comme l’alcool, la drogue, et la vitesse au moment de l’accident.\n
+        Nous pensons que ces dimensions auraient pu apporter des résultats encore plus probants puisqu’ils ont lié fortement à la gravité des accidents d’après les statistiques de la sécurité routière.\n
+        L’accidentologie est un enjeu de santé publique majeur, et chaque année le gouvernement tente d'enrayer la propagation d'accident en cherchant des solutions.
+        Il est important de continuer à investir sur la compréhension des phénomènes des accidents et des leurs liens avec la gravité pour adapter l’urbanisme, et sensibiliser la population afin d’enrayer ce fléau qui a encore causé 3.431 décès sur les routes en France Métropolitaine ou d’Outre-Mer.
+    ''')
