@@ -310,11 +310,11 @@ if page == pages[4] :
         # Charger le fichier accidents après preepocessing
         accidents = r"C:\Users\anoua\Downloads\accidents-routes-cda\accidents.csv"
         df_accidents = pd.read_csv(accidents)
-
-        with st.expander("Aperçu des premières lignes de notre dataset final", icon=":material/dataset:") :
+        st.write('')
+        with st.expander("Aperçu des premières lignes de notre dataset final", icon=":material/overview_key:") :
             st.dataframe(df_accidents.head())
-
-        with st.expander("Objectifs", icon=":material/dataset:") :
+        st.write('')
+        with st.expander("Objectifs", icon=":material/view_object_track:") :
             st.write('''
                     L’objectif de notre étude est de modéliser la gravité des accidents de la route en France.\n 
                     La variable «grav» contient les données suivantes :\n
@@ -323,7 +323,29 @@ if page == pages[4] :
                     3 = blessé hospitalisé\n
                     4 = blessé léger\n
                 ''')
-        with st.expander("Sépartion du jeu de données", icon=":material/dataset:") :
+        st.write('')
+        with st.expander("Pourquoi faire du Machine Learning", icon=":material/manufacturing:") :
+            st.write('''
+                    En Machine Learning, l'objectif est de prédire la valeur d'une variable cible à partir de variables explicatives.\n
+                    Les différentes valeurs prises par la variable cible sont ce qu'on appelle des classes.\n
+                    Nous sommes dans un problème de classification, nous choisirons le modèle adapté pour mettre en place notre modèle de Machine Learning.\n
+                    L'objectif de la classification est donc de prédire la classe d'une observation à partir de ses variables explicatives.
+                ''')
+        st.write('')  
+        with st.expander("Quelques définitions importantes", icon=":material/check_circle:") :
+            st.write('''
+                        ✓ Le jeu d'entrainement sert à entraîner le modèle de classification,c'est-à-dire à trouver les paramètres du modèle qui séparent au mieux les classes.
+                     Le modèle va apprendre et s'entraîner\n
+                        ✓  Le jeu de test sert à évaluer le modèle sur des données qu'il n'a jamais vues. Cette étape nous permettra d'évaluer la capacité du modèle à se généraliser.\n
+                        ✓  L’overfitting est un problème en apprentissage automatique où un modèle apprend trop bien les données d'entraînement, au point de capturer le bruit et les détails inutiles. Cela le rend moins performant sur de nouvelles données, car il ne généralise pas bien.\n
+                        ✓  Métriques utilisées :\n
+                        • Score    : Calcule une métrique de performance du modèle en comparant les vraies valeurs de la variable cible à la prédiction.\n
+                        • Recall   : Mesure la capacité du modèle à détecter correctement toutes les instances positives\n  
+                        • F1-score : Utile pour les problèmes de classification binaire car elle prend en compte à la fois la précision et le rappel pour calculer un score global.\n  
+                        • Accuracy : c'est une métrique d’évaluation en Machine Learning qui mesure le pourcentage de prédictions correctes faites par un modèle.\n  
+                    ''')
+        st.write('')
+        with st.expander("Sépartion de notre jeu de données", icon=":material/dataset:") :
             st.write('''
                     Notre jeu de données a été séparé en deux DataFrame distincts :\n
                     •	X : contenant les varaibles explicatives\n
@@ -331,7 +353,7 @@ if page == pages[4] :
                     Pour chaque modèle que nous allons lancer, nous séparons le jeu de données en un jeu de test pour ***20%***  et un jeu d’entrainement pour ***80%*** selon la formule suivante :
                 ''')
             st.code("X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)", language="python")
-
+            
     with tab2 :
         st.write('')
         with st.expander("Défintiion", icon=":material/dataset:") :
@@ -355,14 +377,22 @@ if page == pages[4] :
                     ''')
         st.write('')
         with st.expander("Point faible", icon=":material/dataset:") :
-            st.write('''Le modèle peut être difficile à interpreter.
-                    ''')
+            st.write('''•   Le modèle peut être difficile à interpreter''')
+        st.write('')
         with st.expander("Resultat du modèle sans hyper paramètres", icon=":material/dataset:") :
-            st.write('''
+            left_co, cent_co,last_co = st.columns(3)
+            with cent_co:
+                st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_Random_Forest_Sans_Hyperarametre.png", caption="Random Forest sans hyper paramètres")
+            with st.popover("Interpretation du resultat") :
+                st.write('''
                     ''')
         st.write('')
-        with st.expander("Resultat du modèle avec hyper paramètres", icon=":material/dataset:") :
-            st.write('''
+        with st.expander("Resultat du modèle avec hyper paramètres (max_depth=8)", icon=":material/dataset:") :
+            left_co, cent_co,last_co = st.columns(3)
+            with cent_co:
+                st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_Random_Forest_Avec_Hyperparametre.png", caption="Random Forest avec hyper paramètres (max_depth=8)")
+            with st.popover("Interpretation du resultat") :
+                st.write('''
                     ''')
 
     with tab3 :
@@ -370,7 +400,7 @@ if page == pages[4] :
         with st.expander("Défintiion", icon=":material/dataset:") :
             st.write('''Un ***arbre de décision*** est un modèle de Machine Learning utilisé à la fois en ***régression*** et en 
                         ***classification***. Le modèle cherche à séparer les individus en groupes les plus “homogènes” possible par 
-                        rapport à la variable cible. Plus ils sont homogènes, plus le modèle est performant.\n
+                        rapport à la variable cible. Plus ils sont homogènes, plus le modèle est performant.
                         Le ***DecisionTreeClassifier*** est un algorithme de ***machine learning supervisé*** qui classe les données en 
                         suivant une structure en ***arbre***. Chaque ***nœud*** représente une question basée sur une caractéristique, 
                         et chaque branche correspond à une réponse possible, jusqu'à atteindre une ***feuille*** qui donne la 
@@ -392,17 +422,23 @@ if page == pages[4] :
                     ''')
         st.write('')
         with st.expander("Point faible", icon=":material/dataset:") :
-            st.write('''
-                        •  Peut souffrir d’***overfitting*** si l’arbre est trop profond
-                    ''')
+            st.write(''' •  Peut souffrir d’***overfitting*** si l’arbre est trop profond''')
+        st.write('')
         with st.expander("Resultat du modèle sans hyper paramètres", icon=":material/dataset:") :
-            st.write('''
+            left_co, cent_co,last_co = st.columns(3)
+            with cent_co:
+                st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_Decision_Tree_Sans_Hyperparametre.png", caption="Decision Tree sans hyper paramètres")
+            with st.popover("Interpretation du resultat") :
+                st.write('''
                     ''')
         st.write('')
-        with st.expander("Resultat du modèle avec hyper paramètres", icon=":material/dataset:") :
-            st.write('''
+        with st.expander("Resultat du modèle avec hyper paramètres (max_depth=8)", icon=":material/dataset:") :
+            left_co, cent_co,last_co = st.columns(3)
+            with cent_co:
+                st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_Decision_Tree_Avec_Hyperparametre.png", caption="Decision Tree avec hyper paramètres (max_depth=8)")
+            with st.popover("Interpretation du resultat") :
+                st.write('''
                     ''')
-
     with tab4 :
         st.write('')
         with st.expander("Défintiion", icon=":material/dataset:") :
@@ -434,12 +470,37 @@ if page == pages[4] :
                         •  Moins flexible sur le réglage des hyperparamètres\n
                         •  Besoin de plus de mémoire\n
                     ''')
-        with st.expander("Resultat du modèle sans hyper paramètres", icon=":material/dataset:") :
-            st.write('''
+        st.write('')
+        with st.expander("Resultat du modèle avec hyper paramètres: iterations = 500", icon=":material/dataset:") :
+            left_co, cent_co,last_co = st.columns(3)
+            with cent_co:
+                st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_CatBoost_Avec_Hyperparametre_Iteration_500.png", caption="CatBoost avec hyper paramètres: iterations=500")
+            with st.popover("Interpretation du resultat") :
+                st.write('''
                     ''')
         st.write('')
-        with st.expander("Resultat du modèle avec hyper paramètres", icon=":material/dataset:") :
-            st.write('''
+        with st.expander("Resultat du modèle avec hyper paramètres: iterations = 500 et learning_rate =0.1", icon=":material/dataset:") :
+            left_co, cent_co,last_co = st.columns(3)
+            with cent_co:
+                st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_CatBoost_Avec_Hyperparametre_Iteration_500_Learning_Rate_01.png", caption="CatBoost avec hyper paramètres: iterations=500 et learning_rate=0.01")
+            with st.popover("Interpretation du resultat") :
+                st.write('''
+                    ''')
+        st.write('')
+        with st.expander("Resultat du modèle avec hyper paramètres: iterations = 1000 et learning_rate =0.01", icon=":material/dataset:") :
+            left_co, cent_co,last_co = st.columns(3)
+            with cent_co:
+                st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_CatBoost_Avec_Hyperparametre_Iteration_1000_Learning_Rate_01.png", caption="CatBoost avec hyper paramètres: iterations=1000 et learning_rate=0.01")
+            with st.popover("Interpretation du resultat") :
+                st.write('''
+                    ''')
+        st.write('')
+        with st.expander("Resultat du modèle avec hyper paramètres: iterations = 1000, learning_rate =0.01 et depth=5", icon=":material/dataset:") :
+            left_co, cent_co,last_co = st.columns(3)
+            with cent_co:
+                st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_CatBoost_Avec_Hyperparametre_Iteration_1000_Learning_Rate_001.png", caption="CatBoost avec hyper paramètres: iterations=1000, learning_rate=0.01 et depth=5")
+            with st.popover("Interpretation du resultat") :
+                st.write('''
                     ''')
 
     with tab5 :
