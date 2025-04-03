@@ -10,28 +10,31 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
+import requests
+from io import BytesIO
+
 
 #Chargement des datasets
-caracteristiques = r"C:\Users\anoua\Downloads\me\datascientest\Projets\data\caracteristiques.csv"
-lieux = r"C:\Users\anoua\Downloads\me\datascientest\Projets\data\lieux.csv"
-usagers = r"C:\Users\anoua\Downloads\me\datascientest\Projets\data\usagers.csv"
-vehicules = r"C:\Users\anoua\Downloads\me\datascientest\Projets\data\vehicules.csv"
+caracteristiques = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv"
+lieux = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/lieux.csv"
+usagers = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/usagers.csv"
+vehicules = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/vehicules.csv"
 
-description_variables = r"C:\Users\anoua\Downloads\accidents-routes-cda\Projets accidents - Description des variables.xlsx"
+description_variables = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx"
 
 @st.cache_data 
 def charger_datasets():
-    df_caracteristiques = pd.read_csv(caracteristiques, encoding = "ISO-8859-1", header=0, index_col=0)
-    df_lieux = pd.read_csv(lieux, encoding = "ISO-8859-1", header=0, index_col=0)
-    df_usagers= pd.read_csv(usagers, encoding = "ISO-8859-1", header=0, index_col=0)
-    df_vehicules= pd.read_csv(vehicules, encoding = "ISO-8859-1", header=0, index_col=0)
-    df_description_variables = pd.read_excel(description_variables)
+    df_caracteristiques = pd.read_csv(BytesIO(requests.get(caracteristiques, verify=False).content), encoding = "ISO-8859-1", header=0, index_col=0)
+    df_lieux = pd.read_csv(BytesIO(requests.get(lieux, verify=False).content), encoding = "ISO-8859-1", header=0, index_col=0)
+    df_usagers= pd.read_csv(BytesIO(requests.get(usagers, verify=False).content), encoding = "ISO-8859-1", header=0, index_col=0)
+    df_vehicules= pd.read_csv(BytesIO(requests.get(vehicules, verify=False).content), encoding = "ISO-8859-1", header=0, index_col=0)
+    df_description_variables = pd.read_excel(BytesIO(requests.get(description_variables, verify=False).content))
     return df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables
-
 
 #Titre du streamlit
 st.set_page_config(layout="wide")
 st.title("Prédiction de la gravité des accidents :collision:")
+df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables = charger_datasets()
 
 #Configuration bandeau gauche de la page
     #Sommaire et navigation
@@ -314,7 +317,7 @@ if page == pages[4] :
     with tab1 :
         st.write('')
         # Charger le fichier accidents après preepocessing
-        accidents = r"C:\Users\anoua\Downloads\accidents-routes-cda\accidents.csv"
+        accidents = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv"
         df_accidents = pd.read_csv(accidents)
         st.write('')
         with st.expander("Aperçu des premières lignes de notre dataset final", icon=":material/overview_key:") :
@@ -567,10 +570,10 @@ if page == pages[4] :
         model_DT_8 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/DT_8.joblib"
 
         # cat Boost
-        model_CBC_I500=r"C:\Users\anoua\Downloads\CatBoost\CBC_I500.joblib"
-        model_CBC_I500_LR_01=r"C:\Users\anoua\Downloads\CatBoost\CBC_I500_LR0.1.joblib"
-        model_CBC_I1000_LR_001=r"C:\Users\anoua\Downloads\CatBoost\CBC_I1000_LR0.01.joblib"
-        model_CBC_I1000_LR_001_D5=r"C:\Users\anoua\Downloads\CatBoost\CBC_I1000_LR0.01_D5.joblib"
+        model_CBC_I500=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I500.joblib"
+        model_CBC_I500_LR_01=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I500_LR0.1.joblib"
+        model_CBC_I1000_LR_001=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I1000_LR0.01.joblib"
+        model_CBC_I1000_LR_001_D5=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I1000_LR0.01_D5.joblib"
 
         # Fonction pour charger le modèle selon le choix de l'utilisateur
         @st.cache_data 
@@ -610,13 +613,13 @@ if page == pages[4] :
         def modele_ml_cb (model) :
             try :
                 if model == "CatBoost_Iteration_500":
-                    return joblib.load(model_CBC_I500)
+                    return joblib.load(BytesIO(requests.get(model_CBC_I500).content))
                 elif model == "CatBoost_Iteration_500_Learning_rate_0.1":
-                    return joblib.load(model_CBC_I500_LR_01)
+                    return joblib.load(BytesIO(requests.get(model_CBC_I500_LR_01).content))
                 elif model == "CatBoost_Iteration_1000_Learning_rate_0.01":
-                    return joblib.load(model_CBC_I1000_LR_001)
+                    return joblib.load(BytesIO(requests.get(model_CBC_I1000_LR_001).content))
                 elif model == "CatBoost_Iteration_1000_Learning_rate_0.1_Depth_5":
-                    return joblib.load(model_CBC_I1000_LR_001_D5)
+                    return joblib.load(BytesIO(requests.get(model_CBC_I1000_LR_001_D5).content))
             except KeyError:
                st.write('')
                return None
