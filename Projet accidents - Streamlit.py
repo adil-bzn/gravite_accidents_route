@@ -12,37 +12,40 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
 import requests
 from io import BytesIO
+import pandas as pd
+import joblib
+from sklearn.metrics import accuracy_score, recall_score, f1_score, classification_report
 
-@st.cache_data
+
+#Chargement datasets en local
+# @st.cache_data
+# def charger_datasets():
+
+#     df_caracteristiques=pd.read_csv(r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\caracteristiques.csv", encoding = "ISO-8859-1",index_col=0)
+#     df_lieux = pd.read_csv(r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\lieux.csv", encoding = "ISO-8859-1",index_col=0)
+#     df_usagers = pd.read_csv(r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\usagers.csv", encoding = "ISO-8859-1",index_col=0)
+#     df_vehicules = pd.read_csv(r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\vehicules.csv", encoding = "ISO-8859-1",index_col=0)
+#     df_description_variables = pd.read_excel(r"C:\Users\adilb\Downloads\Projets accidents - Description des variables.xlsx")
+#     df_accidents = pd.read_csv(r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\5 - Rapport final et codes\df_accidents après pre-processing.csv", encoding = "ISO-8859-1",index_col=0)
+#     return df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents
+
+
+#Chargement datasets depuis GitHub
+@st.cache_data 
 def charger_datasets():
+    df_caracteristiques = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv", verify=False).content), encoding = "ISO-8859-1", header=0, index_col=0)
+    df_lieux = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/lieux.csv", verify=False).content), encoding = "ISO-8859-1", header=0, index_col=0)
+    df_usagers= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/usagers.csv", verify=False).content), encoding = "ISO-8859-1", header=0, index_col=0)
+    df_vehicules= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/vehicules.csv", verify=False).content), encoding = "ISO-8859-1", header=0, index_col=0)
+    df_description_variables = pd.read_excel(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx", verify=False).content))
+    df_accidents = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv", verify = False).content))
+    return df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents
 
-    df_caracteristiques=pd.read_csv(r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\caracteristiques.csv", encoding = "ISO-8859-1",index_col=0)
-    df_lieux = pd.read_csv(r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\lieux.csv", encoding = "ISO-8859-1",index_col=0)
-    df_usagers = pd.read_csv(r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\usagers.csv", encoding = "ISO-8859-1",index_col=0)
-    df_vehicules = pd.read_csv(r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\vehicules.csv", encoding = "ISO-8859-1",index_col=0)
-    df_description_variables = pd.read_excel(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx").content))
-    return df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables
 
 st.set_page_config(layout="wide")
 st.title("Prédiction de la gravité des accidents :collision:")
 
-df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables = charger_datasets()
-
-#Chargement des datasets
-#caracteristiques = r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\caracteristiques.csv"
-#lieux = r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\lieux.csv"
-#usagers = r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\usagers.csv"
-#vehicules = r"C:\Users\adilb\OneDrive\Documents\Projets\Formation Data Analyst\Projet\Cohorte août 24 - Projet accidents\0 - Jeux de données\vehicules.csv"
-#description_variables = r"C:\Users\adilb\Downloads\Projets accidents - Description des variables.xlsx"
-#df_caracteristiques = pd.read_csv(caracteristiques, encoding = "ISO-8859-1", index_col=0)
-#df_lieux = pd.read_csv(lieux, encoding = "ISO-8859-1",index_col=0)
-#df_usagers = pd.read_csv(usagers, encoding = "ISO-8859-1",index_col=0)
-#df_vehicules = pd.read_csv(vehicules, encoding = "ISO-8859-1",index_col=0)
-#df_description_variables = pd.read_excel(description_variables)
-
-#Titre du streamlit
-#st.set_page_config(layout="wide")
-#st.title("Prédiction de la gravité des accidents :collision:")
+df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents = charger_datasets()
 
 #Configuration bandeau gauche de la page
     #Sommaire et navigation
@@ -749,7 +752,7 @@ if page == pages[2] :
     #st.write(':heavy_check_mark: Supprimer des doublons')
     st.write("\n")
 
-    with st.expander("**A.** Supprimer des doublons", icon=":material/heap_snapshot_multiple:") :
+    with st.expander("**1.** Supprimer des doublons", icon=":material/heap_snapshot_multiple:") :
         st.write('''
             Il y a 2858 lignes en doublons dans le dataset df_usagers. 
             Nous les supprimons car ces doubles lignes vont démultiplier le nombre d’accident dans note dataset final.
@@ -759,12 +762,12 @@ if page == pages[2] :
             st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Nombre%20de%20doublon%20dans%20chaque%20dataset%20constituant%20notre%20jeu%20de%20donn%C3%A9e.png", width = 250, caption="Nombre de doublon dans chaque dataset constituant notre jeu de donnée.")
 
 
-    with st.expander("**B.** Modifier le type de la variable « num_acc » du df_usagers", icon=":material/published_with_changes:") :
+    with st.expander("**2.** Modifier le type de la variable « num_acc » du df_usagers", icon=":material/published_with_changes:") :
         st.write('''
             Le type d’origine de la variable « num_acc » est en float64, contrairement aux « num_acc » des autres dataset. Nous uniformisons la variable en modifiant son type en int64.
         ''')
     
-    with st.expander("**C.** Fusionner les quatre datasets dans un seul DataFrame df_accidents", icon=":material/merge:") :
+    with st.expander("**3.** Fusionner les quatre datasets dans un seul DataFrame df_accidents", icon=":material/merge:") :
         with st.popover("Renommer les quatre colonnes « annee […] » de chaque dataset") :
             st.write('''
                 Nous renommons les variables années de chaque dataset (« annee_caracteristiques », « annee_lieux », « annee_usagers » et « annee_vehicules »)..
@@ -774,7 +777,7 @@ if page == pages[2] :
                 Nous effectuons la fusion en trois temps puisque les clés de jointure ne sont pas identiques).
             ''')
 
-    with st.expander("**D.** Supprimer les colonnes en doublon (annee_[…], num_veh_[…]) dans le df_accidents", icon=":material/delete:") :
+    with st.expander("**4.** Supprimer les colonnes en doublon (annee_[…], num_veh_[…]) dans le df_accidents", icon=":material/delete:") :
         with st.popover("Supprimer les colonnes annee_[…] en doublon dans le df_accidents") :
             st.write('''
                 Nous ne conserverons qu’une seule « année » pour notre dataset final. Nous supprimons les colonnes "annee_vehicules", "annee_usagers", "annee_lieux").
@@ -784,18 +787,18 @@ if page == pages[2] :
                 La fusion a créé un « id_vehicule_y », nous supprimons cette colonne.)..
             ''')
 
-    with st.expander("**E.** Renommer les colonnes annee_[…] et num_veh_[…] dans le df_accidents", icon=":material/signature:") :
+    with st.expander("**5.** Renommer les colonnes annee_[…] et num_veh_[…] dans le df_accidents", icon=":material/signature:") :
         st.write('''
             Nous effectuons un renommage des colonnes dont le nom à changer ou que nous avons modifié avant la fusion.
             « num_veh_x » redevient « num_veh » et « annee_caracteristiques » devient « annee ».
         ''')
 
-    with st.expander("**F.** Supprimer les lignes du df_accidents pour lesquelles la colonne annee est supérieure ou égale à 2018", icon=":material/delete_history:") :
+    with st.expander("**6.** Supprimer les lignes du df_accidents pour lesquelles la colonne annee est supérieure ou égale à 2018", icon=":material/delete_history:") :
         st.write('''
             Comme indiqué précédemment, au vue des informations transmises, nous supprimons les données supérieur ou égale à l’année 2018.
         ''')
 
-    with st.expander("**G.** Traitement sur les variables à conserver", icon=":material/construction:") :
+    with st.expander("**7.** Traitement sur les variables à conserver", icon=":material/construction:") :
         st.write('''
             En complément, du travail effectué sur chaque variable, pour notre analyse sur la temporalité, nous avons créé les variables suivantes : "jour_semaine", "date", "heure". 
             Nous avons également supposé pertinent de créer une variable « age » de l'usager au moment de l'accident.
@@ -806,13 +809,573 @@ if page == pages[2] :
 
 
 
-    with st.expander("**H.** Variables conservées", icon=":material/dataset:") :
+    with st.expander("**8.** Variables conservées", icon=":material/dataset:") :
         st.write('''
             Pour donner suite à notre analyse lors de la visualisation, nous décidons de supprimer les colonnes non pertinentes pour les modèles dans le df_accidents. 
         ''')
         st.markdown("<h6 style='text-align: center; color: grey;'>Après la suppression notre dataset df_accidents est composé des colonnes suivantes : </h6>", unsafe_allow_html=True)
         st.markdown("<img src='https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/Variables%20conserv%C3%A9s.png' width='500' style='display: block; margin: 0 auto;'>" , unsafe_allow_html=True)
         st.write("\n\n\n\n\n")
+
+if page == pages[3] :
+
+    #Créer 5 sections dans la page
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([":bulb: Overview",":deciduous_tree: Random Forest Classifier", ":deciduous_tree: Decision Tree Classifier", ":deciduous_tree: CatBoost Classifier", ":arrow_forward: Démo"])
+
+    with tab1 :
+        st.write("\n\n\n\n\n\n\n\n\n\n")
+
+        st.write("### :material/visibility: Aperçu des premières lignes de notre dataset final")
+
+        st.write("\n\n")
+
+        with st.popover("Dictionnaire des variables", icon=":material/dictionary:") :
+            st.dataframe(df_description_variables[(df_description_variables["Variables"]=="mois")|(df_description_variables["Variables"]=="jour")|(df_description_variables["Variables"]=="lum")|(df_description_variables["Variables"]=="agg")|(df_description_variables["Variables"]=="int")|(df_description_variables["Variables"]=="atm")|(df_description_variables["Variables"]=="col")|(df_description_variables["Variables"]=="dep")|(df_description_variables["Variables"]=="annee")|(df_description_variables["Variables"]=="catr")|(df_description_variables["Variables"]=="circ")|(df_description_variables["Variables"]=="plan")|(df_description_variables["Variables"]=="surf")|(df_description_variables["Variables"]=="situ")|(df_description_variables["Variables"]=="place")|(df_description_variables["Variables"]=="catu")|(df_description_variables["Variables"]=="grav")|(df_description_variables["Variables"]=="catv")|(df_description_variables["Variables"]=="obsm")|(df_description_variables["Variables"]=="choc")|(df_description_variables["Variables"]=="manv")], hide_index=True)
+
+        st.dataframe(df_accidents.head())
+
+        st.write("---")
+
+        st.write("### :material/flag: Objectifs")
+
+        st.write("\n\n")
+
+        with st.expander("Pour rappel, notre but est de prédire la gravité des accidents de la route en France, grâce à la variable 'grav'", icon=":material/hotel_class:") :
+            st.write('''
+                * **1 = Indemne** \n
+                * **2 = Tué** \n
+                * **3 = Blessé grave** \n
+                * **4 = Blessé léger** \n
+            ''')
+
+        st.write("---")
+
+        st.write("### :material/question_mark: Quel(s) modèle(s) de Machine Learning utiliser ?")
+
+        with st.expander("Généralité sur le Machine Learning", icon=":material/sticky_note_2:") :
+            st.write('''
+                Grâce au Machine Learning, nous pouvons prédire la valeur d'une variable cible à partir de variables explicatives.\n
+                Les variables explicatives ont été déterminées précédemment, grâce à la partie Data Visualisation. Sont considérées comme variables explicatives toutes les variables ayant une corrélation avec la variable cible. Il appartient au modélisateur de définir ce qu'il considère comme variables explicatives ou non. \n
+                Les différentes valeurs prises par la variable cible sont ce qu'on appelle des classes.
+            ''')
+        with st.expander("Sélection des modèles", icon=":material/done_outline:") :  
+            st.write('''
+                    Nous sommes dans un problème de classification, nous choisirons le modèle adapté pour mettre en place notre modèle de Machine Learning.\n
+                    L'objectif de la classification est donc de prédire la classe d'une observation à partir de ses variables explicatives. \n
+                    Nous utiliserons donc 3 modèles de Machine Learning, adapté à cette problématique, que nous allons mettre en compétition pour définir le plus performant : \n
+                    * **Random Forest Classifier** \n
+                    * **Decision Tree Classifier** \n
+                    * **Cat Boost Classifier** \n
+            ''')
+
+        st.write("---")
+
+        st.write("### :material/dictionary: Quelques définitions importantes")
+
+        with st.expander("Mécanisme du Machine Learning", icon=":material/manufacturing:") :
+            st.write('''
+                * **Le jeu d'entrainement** sert à entraîner le modèle de classification,c'est-à-dire à trouver les paramètres du modèle qui séparent au mieux les classes. Le modèle va apprendre et s'entraîner \n
+                * **Le jeu de test** sert à évaluer le modèle sur des données qu'il n'a jamais vues. Cette étape nous permettra d'évaluer la capacité du modèle à se généraliser \n
+                * **L’overfitting** est un problème en apprentissage automatique où un modèle apprend trop bien les données d'entraînement, au point de capturer le bruit et les détails inutiles. Cela le rend moins performant sur de nouvelles données, car il ne généralise pas bien \n
+            ''')
+        with st.expander("Métriques pour évaluer la performance de nos modèles de Machine Learning", icon=":material/readiness_score:") :  
+            st.write('''
+                    * **Score** : Calcule une métrique de performance du modèle en comparant les vraies valeurs de la variable cible à la prédiction \n
+                    * **Recall** : Mesure la capacité du modèle à détecter correctement toutes les instances positives \n
+                    * **F1-score** : Utile pour les problèmes de classification binaire car elle prend en compte à la fois la précision et le rappel pour calculer un score global \n
+                    * **Accuracy** : Métrique d’évaluation du pourcentage de prédictions correctes faites par un modèle \n
+            ''')
+
+        st.write("---")
+
+        st.write("### :material/arrow_split: Préparation de notre dataset final pour le Machine Learning")
+
+        st.write('''
+            Notre jeu de donnée a été séparé en deux DataFrame distincts :\n
+            * **X** : Contient les variables explicatives\n
+            * **y** : Contient la variable cible\n          
+            Pour chaque modèle que nous allons lancer, nous séparons le jeu de donnée en un jeu de test pour **20%**  et un jeu d’entrainement pour **80%** selon la formule suivante :
+        ''')
+        st.code("X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)", language="python")
+            
+    with tab2 :
+
+        st.write("\n\n\n\n\n\n\n\n\n\n")
+
+        st.write("### :material/dictionary: Définition")
+
+        st.write("\n\n")
+
+        st.write('''
+            Le **RandomForestClassifier** est un algorithme d'apprentissage automatique utilisé pour la classification. \n
+            Il appartient à la famille des **forêts aléatoires (Random Forest)**, qui est une méthode d'ensemble basée 
+            sur plusieurs **arbres de décision**.
+        ''')
+
+        st.write("---")
+
+        st.write("### :material/manufacturing: Fonctionnement du modèle")
+
+        st.write("\n\n")
+
+        st.write('''
+            * Il permet de créer plusieurs arbres de décision sur des sous-échantillons aléatoire de donnée\n
+            * Chaque arbre fait une prédiction\n
+            * La classe finale est déterminée par un **vote majoritaire** des arbres      
+        ''')
+
+        st.write("---")
+
+        st.write("### :material/add_circle: Avantages du modèle")
+
+        st.write("\n\n")
+
+        st.write('''
+            * Il est plus précis et plus robuste qu’un seul arbre de décision\n
+            * Il est moins sensible au surapprentissage (overfitting)\n
+            * Il gère bien les données bruitées et les variables non pertinentes\n
+        ''')
+
+        st.write("---")
+
+        st.write("### :material/do_not_disturb_on: Inconvénient du modèle")
+
+        st.write("\n\n")
+
+        st.write('''
+            * Le modèle peut être difficile à interpréter\n
+        ''')
+
+        st.write("---")
+
+        st.write("### :material/labs: Résultats du modèle et analyses")
+
+        st.write("\n\n")
+
+        col1, col2 = st.columns(2, gap="large")
+
+        with col1 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_Random_Forest_Sans_Hyperarametre.png", caption="Random Forest sans hyper paramètres")
+            
+            st.write("\n")
+
+            st.write('''
+                Comme attendu, nous constatons que notre modèle génère un overfitting très important. Nous n’utiliserons pas ce modèle.
+            ''')
+
+        with col2 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_Random_Forest_Avec_Hyperparametre.png", caption="Random Forest avec hyper paramètres (max_depth=8)")
+            
+            st.write("\n")
+
+            with st.expander("Premier niveau de performance atteint avec la réduction de l'overfitting", icon=":material/settings:") :
+                st.write('''
+                    L’ajout d’un hyper paramètre, rend notre modèle plus performant en réduisant l’overfitting. La différence de score entre notre jeu de test et de notre jeu d’entrainement est considérablement réduite. Le résultat, qui s’élève à 0,62 (jeu d’entrainement et jeu de test), n’est pas aussi bon que le premier modèle car sur le premier nous avons un résultat de 0,99 (jeu d’entrainement) et 0,65 (jeu de test).\n
+                    Le modèle peut malgré tout être considéré comme plus performant que la première version car il se trompe moins dans la prédiction.
+                ''')
+
+    with tab3 :
+
+        st.write("\n\n\n\n\n\n\n\n\n\n")
+
+        st.write("### :material/dictionary: Définition")
+
+        st.write("\n\n")
+
+        st.write('''
+            Un **arbre de décision** est un modèle de Machine Learning utilisé à la fois en **régression** et en **classification**. \n
+            Le modèle cherche à séparer les individus en groupes les plus “homogènes” possible par rapport à la variable cible. Plus ils sont homogènes, plus le modèle est performant. \n
+            Le **DecisionTreeClassifier** est un algorithme de machine learning supervisé qui classe les données en 
+            suivant une structure en **arbre**. Chaque **nœud** représente une question basée sur une caractéristique, 
+            et chaque branche correspond à une réponse possible, jusqu'à atteindre une **feuille** qui donne la 
+            classe finale.
+        ''')
+
+        st.write("---")
+
+        st.write("### :material/manufacturing: Fonctionnement du modèle")
+
+        st.write("\n\n")
+
+        st.write('''
+            * L’algorithme choisit la **meilleure question (feature)** pour séparer les données\n
+            * Il divise les données en **branches** en fonction des réponses\n
+            * Ce processus continue jusqu'à atteindre une **feuille** (classe finale)\n      
+        ''')
+
+        st.write("---")
+
+        st.write("### :material/add_circle: Avantages du modèle")
+
+        st.write("\n\n")
+
+        st.write('''
+            * Facile à comprendre et à visualiser\n
+            * Fonctionne bien avec peu de prétraitement\n
+            * Gère les données quantitatives et catégorielles\n
+        ''')
+
+        st.write("---")
+
+        st.write("### :material/do_not_disturb_on: Inconvénient du modèle")
+
+        st.write("\n\n")
+
+        st.write('''
+            * Peut souffrir d’**overfitting** si l’arbre est trop profond\n
+        ''')
+
+        st.write("---")
+
+        st.write("### :material/labs: Résultats du modèle et analyses")
+
+        st.write("\n\n")
+
+        col1, col2 = st.columns(2, gap="large")
+
+        with col1 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_Decision_Tree_Sans_Hyperparametre.png",caption="Decision Tree sans hyper paramètres")
+            
+            st.write("\n")
+            st.write("\n")
+
+            with st.expander("Overfitting détecté", icon=":material/format_text_overflow:") :
+                st.write('''
+                    Il y a une très grosse différence entre le score du jeu d’entrainement et le score du jeu de test. Notre modèle n’apprend pas à généraliser. Le recall est faible, et l’accuracy n’est que de 55% seulement. C’est une mauvaise performance globale.\n
+                    Notre modèle est adapté uniquement aux données d’entrainement mais ne fonctionne pas bien sur les nouvelles données.
+                ''')
+
+        with col2 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_Decision_Tree_Avec_Hyperparametre.png",caption="Decision Tree avec hyper paramètres (max_depth=8)")
+            
+            st.write("\n")
+
+            with st.expander("Meilleure performance globale", icon=":material/settings:") :
+                st.write('''
+                    L’ajout d’un hyper paramètre, rend notre modèle plus performant en réduisant l’overfitting. La différence de score entre notre jeu de test et de notre jeu d’entrainement est considérablement réduite. Le résultat, qui s’élève à 0,62 (jeu d’entrainement et jeu de test), n’est pas aussi bon que le premier modèle car sur le premier nous avons un résultat de 0,99 (jeu d’entrainement) et 0,65 (jeu de test).\n
+                    Le modèle peut malgré tout être considéré comme plus performant que la première version car il se trompe moins dans la prédiction.
+                ''')
+            with st.expander("Faible recall, donc déséquilibre de classe", icon=":material/trending_down:") :
+                st.write('''
+                    Toutefois, le recall (0,452) reste faible. Dans le détail, en réduisant notre max_depth à 10 nous avons réduit l’overfitting mais nous avons déséquilibré nos classes.\n
+                    La détection des vrais positifs :\n
+                    * s’améliore nettement lorsque grav = 1 (recall = 0,68 à recall = 0,87)\n
+                    * s’améliore très légèrement lorsque grav = 3 (recall = 0,41 à recall = 0,47)\n
+                    * diminue très légèrement lorsque grav = 4 (recall = 0,52 à recall = 0,47)\n
+                    * devient nul lorsque grav = 2 (recall = 0,16 à recall = 0,00)
+                ''')
+
+    with tab4 :
+
+        st.write("\n\n\n\n\n\n\n\n\n\n")
+
+        st.write("### :material/dictionary: Définition")
+
+        st.write("\n\n")
+
+        st.write('''
+            Le **CatBoostClassifier** est un algorithme de machine learning supervisé qui appartient à la famille des 
+            **boosting de gradient**. \n
+            Il est conçu pour gérer efficacement les **données catégorielles** sans 
+            transformation préalable, contrairement à d'autres algorithmes qui nécessitent de faire de l’encodage.
+        ''')
+
+        st.write("---")
+
+        st.write("### :material/manufacturing: Fonctionnement du modèle")
+
+        st.write("\n\n")
+
+        st.write('''
+            *  Construit des arbres de décision successifs, où chaque nouvel arbre corrige les erreurs du précédent\n
+            *  Il remplace les catégories par des **valeurs numériques basées sur la cible**\n
+            *  Il applique cette transformation **de manière progressive** pour éviter les fuites de données (data leakage)\n
+            *  Il utilise une technique appelée **Ordre des permutations** pour éviter les biais d'entraînement\n
+            *  Il applique un **boosting symétrique** qui construit **tous les arbres en parallèle**, ce qui accélère l'entraînement et améliore la stabilité\n      
+        ''')
+
+        st.write("---")
+
+        st.write("### :material/add_circle: Avantages du modèle")
+
+        st.write("\n\n")
+
+        st.write('''
+            * **Performant** sur les petits et grands ensembles de données\n
+            * **Gère automatiquement** les variables catégoriques (pas besoin de One-Hot Encoding)\n
+            * **Moins sensible au surapprentissage** (overfitting)\n
+            * **Rapide et efficace**, même avec des données manquantes\n
+        ''')
+
+        st.write("---")
+
+        st.write("### :material/do_not_disturb_on: Inconvénient du modèle")
+
+        st.write("\n\n")
+
+        st.write('''
+            *  Temps d’entraînement plus long\n
+            *  Moins flexible sur le réglage des hyperparamètres\n
+            *  Besoin de plus de mémoire\n
+        ''')
+
+        st.write("---")
+
+        st.write("### :material/labs: Résultats du modèle et analyses")
+
+        st.write("\n\n")
+
+        col1, col2 = st.columns(2, gap="large")
+
+        with col1 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_CatBoost_Avec_Hyperparametre_Iteration_500.png", caption="CatBoost avec hyper paramètres: iterations=500")
+            
+            st.write("\n")
+
+            with st.expander("Pas de présence d'un gros overfitting", icon=":material/fit_screen:") :
+                st.write('''
+                    Le modèle généralise bien, avec une très faible différence entre l’entraînement et le test, ce qui indique qu’il n’y a pas d’overfitting important.
+                ''')
+            with st.expander("Amélioration de la détection des cas positifs", icon=":material/trending_up:") :
+                st.write('''
+                Le modèle généralise bien, avec une très faible différence entre l’entraînement et le test, ce qui indique qu’il n’y a pas d’overfitting important.\n
+                Recall = 0.497 : le modèle détecte mieux les cas positifs comparé à d’autres modèles précédents. Il capture un nombre raisonnable de vrais positifs.\n
+                Une bonne précision et un bon recall pour la classe 1, ce qui indique que le modèle fait un bon travail sur la classe majoritaire.\n
+                La classe 2 reste apparemment mal captée par le modèle.\n
+                Les classes 3 et 4 sont bien mieux traitées même si elles ne sont pas parfaites.
+                ''')
+
+        with col2 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_CatBoost_Avec_Hyperparametre_Iteration_500_Learning_Rate_01.png", caption="CatBoost avec hyper paramètres: iterations=500 et learning_rate=0.01")
+            
+            st.write("\n")
+
+            with st.expander("Timide réduction de l'overfitting par rapport au modèle de gauche", icon=":material/trending_up:") :
+                st.write('''
+                    Très légère amélioration par rapport au modèle de gauche qui montre une bonne généralisation et une petite diminution du surapprentissage par rapport à l’itération sans learning_rate = 0,01.
+                ''')
+            with st.expander("Recall équivalent au modèle de gauche", icon=":material/equal:") :
+                st.write('''
+                Le recall est pratiquement identique à celui de l’itération de gauche, ce qui montre que les performances générales n’ont pas significativement changées avec le nouveau learning_rate.\n
+                La classe 2 continue à avoir un recall très faible. Le modèle a du mal à capturer cette classe.\n
+                Pour la classe 3 et la classe 4, le recall reste modéré.
+                ''')
+
+        st.write("\n")
+        st.write("\n")
+        st.write("\n")
+        st.write("\n")
+
+        col3, col4 = st.columns(2, gap="large")
+
+        with col3 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_CatBoost_Avec_Hyperparametre_Iteration_1000_Learning_Rate_01.png", caption="CatBoost avec hyper paramètres: iterations=1000 et learning_rate=0.1")
+            
+            st.write("\n")
+
+            with st.expander("Un overfitting qui continue de cécroitre comparé aux itérations ci-dessus", icon=":material/trending_down:") :
+                st.write('''
+                    Ces résultats montrent que notre modèle est très stable et continue à bien généraliser, avec une faible différence entre l’entraînement et le test, ce qui signifie moins de surapprentissage.
+                ''')
+            with st.expander("Un recall qui repart à légèrement à la baisse par rapport aux modèles ci-dessus", icon=":material/trending_down:") :
+                st.write('''
+                    Recall = 0,482 : Bien que légèrement plus faible que ceux obtenus avec des hyperparamètres plus élevés pour le taux d'apprentissage, ces résultats restent raisonnables et montrent que le modèle arrive à identifier une proportion significative de vrais positifs.\n
+                    Notre classe 2 reste très mal prédite.\n
+                    Les classes 3 et 4 restent encore modérées, cela suggère que notre modèle a encore des difficultés à prédire correctement ces classes, notamment pour la classe 3.
+                ''')
+
+        with col4 :
+            st.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Resultat_Machine_Learning/Resultat_CatBoost_Avec_Hyperparametre_Iteration_1000_Learning_Rate_001.png", caption="CatBoost avec hyper paramètres: iterations=1000, learning_rate=0.01 et depth=5")
+            
+            st.write("\n")
+
+            with st.expander("Le modèle avec le plus faible écart entre le jeu d'entrainement et le jeu de test", icon=":material/rewarded_ads:") :
+                st.write('''
+                    Les scores montrent une très faible différence entre l’entraînement et le test, ce qui est un bon signe de généralisation sans surapprentissage.
+                ''')
+            with st.expander("Un recall qui diminue encore par rapport aux 3 autres modèles", icon=":material/trending_down:") :
+                st.write('''
+                Recall = 0,479 : Les performances restent stables et relativement raisonnables, bien que légèrement inférieures à celles d'autres configurations. Le modèle continue à bien détecter une proportion de vrais positifs dans les classes.\n
+                Toutefois, les problèmes persistent pour la classe 2 et les classes 3 et 4.\n
+                Notre modèle continue de donner des bons résultats avec très peu de surapprentissage, mais il reste des problèmes dans la prédiction des classes minoritaires.
+                ''')
+
+    with tab5 :
+
+        st.write('')
+
+        # Variables prédictives (features) et variable cible
+        X = df_accidents[['mois','annee', 'jour_semaine','heure','agg','col','dep','catr','situ','catu','catv','obsm','choc','age','place','manv']]
+        y = df_accidents['grav']
+
+        # Séparation en données d'entraînement et de test
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        # Chemins des modèles pré-entrainés
+
+        # Random Forest
+        model_RF_0 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/RF_5.joblib"
+        model_RF_5 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/RF_5.joblib"
+        model_RF_6 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/RF_6.joblib"
+        model_RF_7 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/RF_7.joblib"
+        model_RF_8 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/RF_8.joblib"
+
+        # Decision Tree
+        model_DT_0 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/DT_5.joblib"
+        model_DT_5 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/DT_5.joblib"
+        model_DT_6 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/DT_6.joblib"
+        model_DT_7 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/DT_7.joblib"
+        model_DT_8 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/DT_8.joblib"
+
+        # cat Boost
+        model_CBC_I500=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I500.joblib"
+        model_CBC_I500_LR_01=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I500_LR0.1.joblib"
+        model_CBC_I1000_LR_001=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I1000_LR0.01.joblib"
+        model_CBC_I1000_LR_001_D5=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I1000_LR0.01_D5.joblib"
+
+        # Fonction pour charger le modèle selon le choix de l'utilisateur
+        @st.cache_data 
+        def modele_machine_learning(model, profondeur):
+           try :
+               if model == "Random Forest Classifier":
+                   if profondeur == 0:
+                       return joblib.load(BytesIO(requests.get(model_RF_0).content))
+                   elif profondeur == 5:
+                       return joblib.load(BytesIO(requests.get(model_RF_5).content))
+                   elif profondeur == 6:
+                       return joblib.load(BytesIO(requests.get(model_RF_6).content))
+                   elif profondeur == 7:
+                       return joblib.load(BytesIO(requests.get(model_RF_7).content))
+                   elif profondeur == 8:
+                       return joblib.load(BytesIO(requests.get(model_RF_8).content))
+               elif model == "Decision Tree Classifier":
+                   if profondeur == 0:
+                       return joblib.load(BytesIO(requests.get(model_DT_0).content))
+                   elif profondeur == 5:
+                       return joblib.load(BytesIO(requests.get(model_DT_5).content))
+                   elif profondeur == 6:
+                       return joblib.load(BytesIO(requests.get(model_DT_6).content))
+                   elif profondeur == 7:
+                       return joblib.load(BytesIO(requests.get(model_DT_7).content))
+                   elif profondeur == 8:
+                       return joblib.load(BytesIO(requests.get(model_DT_8).content))
+           except KeyError:
+               st.write('')
+               return None
+           except Exception as e:
+               st.write("Erreur lors du chargement du modèle :", e)
+               return None
+           
+        # Fonction pour charger le modèle selon le choix de l'utilisateur
+        @st.cache_data 
+        def modele_ml_cb (model) :
+            try :
+                if model == "CatBoost_Iteration_500":
+                    return joblib.load(BytesIO(requests.get(model_CBC_I500).content))
+                elif model == "CatBoost_Iteration_500_Learning_rate_0.1":
+                    return joblib.load(BytesIO(requests.get(model_CBC_I500_LR_01).content))
+                elif model == "CatBoost_Iteration_1000_Learning_rate_0.01":
+                    return joblib.load(BytesIO(requests.get(model_CBC_I1000_LR_001).content))
+                elif model == "CatBoost_Iteration_1000_Learning_rate_0.1_Depth_5":
+                    return joblib.load(BytesIO(requests.get(model_CBC_I1000_LR_001_D5).content))
+            except KeyError:
+               st.write('')
+               return None
+            except Exception as e:
+               st.write("Erreur lors du chargement du modèle :", e)
+               return None
+            
+        # Fonction pour calculer les scores sur les données d'entraînement
+        def train_scores(model, metrique):
+            y_pred = model.predict(X_train)  
+            if metrique == "Accuracy":
+                return accuracy_score(y_train, y_pred)
+            elif metrique == "Recall":
+                return recall_score(y_train, y_pred, average="macro")
+            elif metrique == "F1-score":
+                return f1_score(y_train, y_pred, average='macro')
+            elif metrique == "Classification Report":
+                return classification_report(y_train, y_pred)
+            else:
+                return "Métrique invalide"
+
+        # Fonction pour calculer les scores sur les données de test
+        def test_scores(model, metrique):
+            y_pred = model.predict(X_test)
+            if metrique == "Accuracy":
+                return accuracy_score(y_test, y_pred)
+            elif metrique == "Recall":
+                return recall_score(y_test, y_pred, average="macro")
+            elif metrique == "F1-score":
+                return f1_score(y_test, y_pred, average='macro')
+            elif metrique == "Classification Report":
+                return classification_report(y_test, y_pred)
+            else:
+                return "Métrique invalide"
+
+        # Interface Streamlit
+        left_co, right_co = st.columns(2)
+        with left_co:
+            # Choisir le modèle
+            choix_modele = ["Random Forest Classifier", "Decision Tree Classifier"]
+            modele_choisi = st.selectbox("Choisissez un modèle de Machine Learning :", choix_modele, index=None, placeholder="cliquez ici ...")
+            st.write("Vous avez choisi le modèle : ", modele_choisi)
+            st.write('')
+            # Choisir la profondeur
+            profondeur_choisi = st.slider("Choisissez une profondeur (max_depth) pour votre modèle :", 5, 8)
+            st.write("Vous avez choisi une profondeur de :", profondeur_choisi)
+
+            # Charger le modèle sélectionné
+            model = modele_machine_learning(modele_choisi, profondeur_choisi)
+
+            # Choisir la métrique à afficher
+            display = st.radio("Quelle métrique souhaitez-vous afficher ?", ("Accuracy", "Recall", "F1-score", "Classification Report"))
+
+            # Si un modèle est chargé
+            if model:  
+                if display == "Accuracy":
+                    st.write("Score sur le jeu d'entrainement :", train_scores(model, display))
+                    st.write("Score sur le jeu de test :", test_scores(model, display))
+                elif display == "Recall":
+                    #st.write("Score d'entraînement:", train_scores(model, display))
+                    st.write("Recall :", test_scores(model, display))
+                elif display == "F1-score":
+                    #st.write("Score d'entraînement:", train_scores(model, display))
+                    st.write("F1-score :", test_scores(model, display))
+                elif display == "Classification Report":
+                    #st.text(train_scores(model, display))
+                    st.text(test_scores(model, display))
+
+            st.write("\n\n\n\n\n")
+            st.write("---")
+            st.write("\n\n\n\n\n")
+
+            # Choisir le modèle
+            choix_modele_ml_cb = ["CatBoost_Iteration_500", "CatBoost_Iteration_500_Learning_rate_0.1", "CatBoost_Iteration_1000_Learning_rate_0.01", "CatBoost_Iteration_1000_Learning_rate_0.1_Depth_5"]
+            modele_ml_cb_choisi = st.selectbox("Choisissez un modèle de Machine Learning :", choix_modele_ml_cb, index=None, placeholder="cliquez ici ...")
+            st.write("Vous avez choisi le modèle : ", modele_ml_cb_choisi)
+            st.write('')
+
+            # Charger le modèle sélectionné
+            model_cb = modele_ml_cb(modele_ml_cb_choisi)
+
+            # Choisir la métrique à afficher
+            display_cb = st.radio("Quelle métrique souhaitez-vous afficher ? ", ("Accuracy", "Recall", "F1-score", "Classification Report"))
+
+            # Si un modèle est chargé
+            if model_cb:
+                if display_cb == "Accuracy":
+                    st.write("Score sur le jeu d'entrainement :", train_scores(model_cb, display_cb))
+                    st.write("Score sur le jeu de test :", test_scores(model_cb, display_cb))
+                elif display_cb == "Recall":
+                    #st.write("Score d'entraînement:", train_scores(model, display))
+                    st.write("Recall :", test_scores(model_cb, display_cb))
+                elif display_cb == "F1-score":
+                    #st.write("Score d'entraînement:", train_scores(model, display))
+                    st.write("F1-score :", test_scores(model_cb, display_cb))
+                elif display_cb == "Classification Report":
+                    #st.text(train_scores(model, display))
+                    st.text(test_scores(model_cb, display_cb))
 
 if page == pages[4] :
 
