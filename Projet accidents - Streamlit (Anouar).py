@@ -540,7 +540,6 @@ if page == pages[4] :
                 Toutefois, les problèmes persistent pour la classe 2 et les classes 3 et 4.\n
                 Notre modèle continue de donner des bons résultats avec très peu de surapprentissage, mais il reste des problèmes dans la prédiction des classes minoritaires.
                     ''')
-
     with tab5 :
         st.write('')
 
