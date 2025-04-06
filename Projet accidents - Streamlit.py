@@ -192,30 +192,6 @@ if page == pages[0] :
 
     st.write("---")
 
-    st.write("### :material/fit_screen: Réduction de la profondeur des données")
-
-    st.write("\n\n")
-
-    with st.expander("Nous ne conservons que les accidents entre 2005 et 2017, soit 12 ans d'historique", icon=":material/delete_history:") :
-        st.write('''
-            Lors du lancement de notre projet Fil Rouge, nous avons pris la décision de prendre la base de 
-            données contenant la totalité des informations de 2005 à 2021 pour chacun des 4 fichiers 
-            (Caractéristiques – Lieux – Véhicules – Usagers) au format CSV. \n
-            Nous avons fait le choix de conserver les données sur les 12 premières années (2005 à 2017) pour 
-            chaque fichier puisque le document de description des bases de données annuelles des accidents, mis 
-            à notre disposition par L' Observatoire national interministériel de la sécurité routière, nous apporte 
-            cet avertissement :\n
-            « *Les données sur la qualification de blessé hospitalisé depuis l’année 2018 ne pouvant être comparées 
-            aux années précédentes suite à des modifications de process de saisie des forces de l’ordre. L’indicateur 
-            « blessé hospitalisé » n’est plus labellisé par l’autorité de la statistique publique depuis 2019.
-            A partir des données de 2021, les usagers en fuite ont été rajoutés, cela entraîne des manques 
-            d’informations sur ces derniers, notamment le sexe, l’âge, voire la gravité des blessures 
-            (indemne,blessé léger ou blessé hospitalisé).* ». \n
-            Nous supprimons donc toutes les lignes dont les accidents sont enregistrés à partir de 2018.
-        ''')
-
-    st.write("---")
-
     st.write("### :material/join_left: Jointure entre les 4 fichiers")
 
     st.write("\n\n")
@@ -359,7 +335,7 @@ if page == pages[1] :
         st.write("\n\n\n\n\n\n\n\n\n\n")
 
         #Titre 1
-        st.write("### :material/road: :material/pin_drop: :material/car_crash: :material/personal_injury: Accidents par catégorie de route")
+        st.write("### :material/road: :material/pin_drop: :material/car_crash: :material/personal_injury: Accidents par localisation de l'accident sur la route")
 
         st.write("\n\n")
 
@@ -394,7 +370,7 @@ if page == pages[1] :
         st.write("---")
 
         #Titre 1
-        st.write("### :material/road: :material/pin_drop: :material/car_crash: :material/personal_injury: Accidents par localisation sur la route")
+        st.write("### :material/road: :material/pin_drop: :material/car_crash: :material/personal_injury: Accidents par catégorie de route")
 
         st.write("\n\n")
 
@@ -795,7 +771,20 @@ if page == pages[2] :
 
     with st.expander("**6.** Supprimer les lignes du df_accidents pour lesquelles la colonne annee est supérieure ou égale à 2018", icon=":material/delete_history:") :
         st.write('''
-            Comme indiqué précédemment, au vue des informations transmises, nous supprimons les données supérieur ou égale à l’année 2018.
+            Lors du lancement de notre projet Fil Rouge, nous avons pris la décision de prendre la base de 
+            données contenant la totalité des informations de 2005 à 2021 pour chacun des 4 fichiers 
+            (Caractéristiques – Lieux – Véhicules – Usagers) au format CSV. \n
+            Nous avons fait le choix de conserver les données sur les 13 premières années (2005 à 2017) pour 
+            chaque fichier puisque le document de description des bases de données annuelles des accidents, mis 
+            à notre disposition par L' Observatoire national interministériel de la sécurité routière, nous apporte 
+            cet avertissement :\n
+            « *Les données sur la qualification de blessé hospitalisé depuis l’année 2018 ne pouvant être comparées 
+            aux années précédentes suite à des modifications de process de saisie des forces de l’ordre. L’indicateur 
+            « blessé hospitalisé » n’est plus labellisé par l’autorité de la statistique publique depuis 2019.
+            A partir des données de 2021, les usagers en fuite ont été rajoutés, cela entraîne des manques 
+            d’informations sur ces derniers, notamment le sexe, l’âge, voire la gravité des blessures 
+            (indemne,blessé léger ou blessé hospitalisé).* ». \n
+            Nous supprimons donc toutes les lignes dont les accidents sont enregistrés à partir de 2018.
         ''')
 
     with st.expander("**7.** Traitement sur les variables à conserver", icon=":material/construction:") :
@@ -810,6 +799,10 @@ if page == pages[2] :
 
 
     with st.expander("**8.** Variables conservées", icon=":material/dataset:") :
+        
+        with st.popover("Dictionnaire des variables", icon=":material/dictionary:") :
+            st.dataframe(df_description_variables[(df_description_variables["Variables"]=="mois")|(df_description_variables["Variables"]=="jour")|(df_description_variables["Variables"]=="lum")|(df_description_variables["Variables"]=="agg")|(df_description_variables["Variables"]=="int")|(df_description_variables["Variables"]=="atm")|(df_description_variables["Variables"]=="col")|(df_description_variables["Variables"]=="dep")|(df_description_variables["Variables"]=="annee")|(df_description_variables["Variables"]=="catr")|(df_description_variables["Variables"]=="circ")|(df_description_variables["Variables"]=="plan")|(df_description_variables["Variables"]=="surf")|(df_description_variables["Variables"]=="situ")|(df_description_variables["Variables"]=="place")|(df_description_variables["Variables"]=="catu")|(df_description_variables["Variables"]=="grav")|(df_description_variables["Variables"]=="catv")|(df_description_variables["Variables"]=="obsm")|(df_description_variables["Variables"]=="choc")|(df_description_variables["Variables"]=="manv")], hide_index=True)
+
         st.write('''
             Pour donner suite à notre analyse lors de la visualisation, nous décidons de supprimer les colonnes non pertinentes pour les modèles dans le df_accidents. 
         ''')
@@ -1173,11 +1166,11 @@ if page == pages[3] :
             
             st.write("\n")
 
-            with st.expander("Un overfitting qui continue de cécroitre comparé aux itérations ci-dessus", icon=":material/trending_down:") :
+            with st.expander("Un overfitting qui continue de décroitre comparé aux itérations ci-dessus", icon=":material/trending_down:") :
                 st.write('''
                     Ces résultats montrent que notre modèle est très stable et continue à bien généraliser, avec une faible différence entre l’entraînement et le test, ce qui signifie moins de surapprentissage.
                 ''')
-            with st.expander("Un recall qui repart à légèrement à la baisse par rapport aux modèles ci-dessus", icon=":material/trending_down:") :
+            with st.expander("Un recall qui repart légèrement à la baisse par rapport aux modèles ci-dessus", icon=":material/trending_down:") :
                 st.write('''
                     Recall = 0,482 : Bien que légèrement plus faible que ceux obtenus avec des hyperparamètres plus élevés pour le taux d'apprentissage, ces résultats restent raisonnables et montrent que le modèle arrive à identifier une proportion significative de vrais positifs.\n
                     Notre classe 2 reste très mal prédite.\n
