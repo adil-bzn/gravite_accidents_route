@@ -644,7 +644,7 @@ if page == pages[1] :
             quarantaine, pour décroitre timidement jusqu’à la cinquantaine, avant de reprendre une forte 
             décroissance.
             ''')
-        with st.expander("Les fragilités physiques et comportements routiers spécifiques aux jeunes personnes ont une implication dans la gravité des accidents auxquels ils sont soumis", icon=":material/personal_injury:") :
+        with st.expander("Les fragilités physiques des personnes âgées et les comportements routiers spécifiques aux jeunes personnes ont une implication dans la gravité des accidents auxquels ils sont soumis", icon=":material/personal_injury:") :
             st.write('''
             Il est indéniable que les jeunes sont les plus concernés par les accidents. Le pic d’accident se situe 
             pour les usagers de 19 ans. A partir de la vingtaine, les accidents décroissent fortement jusqu’à la 
