@@ -34,12 +34,12 @@ import traceback
 #Chargement datasets depuis GitHub
 @st.cache_data 
 def charger_datasets():
-    df_caracteristiques = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv", verify=False).content), encoding = "ISO-8859-1", header=0, index_col=0)
-    df_lieux = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/lieux.csv", verify=False).content), encoding = "ISO-8859-1", header=0, index_col=0)
-    df_usagers= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/usagers.csv", verify=False).content), encoding = "ISO-8859-1", header=0, index_col=0)
-    df_vehicules= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/vehicules.csv", verify=False).content), encoding = "ISO-8859-1", header=0, index_col=0)
-    df_description_variables = pd.read_excel(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx", verify=False).content))
-    df_accidents = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv", verify = False).content))
+    df_caracteristiques = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+    df_lieux = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/lieux.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+    df_usagers= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/usagers.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+    df_vehicules= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/vehicules.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+    df_description_variables = pd.read_excel(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx").content))
+    df_accidents = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv").content))
     return df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents
 
 try :
