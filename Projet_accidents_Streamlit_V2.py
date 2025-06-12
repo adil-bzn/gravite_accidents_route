@@ -35,27 +35,30 @@ import traceback
 try :
     st.set_page_config(layout="wide")
     st.title("Prédiction de la gravité des accidents :collision:")
-    st.write("1- Lancement de l'app Streamlit... ✅")
     #Chargement datasets depuis GitHub
     @st.cache_data 
     def charger_datasets():
-        df_caracteristiques = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
-        st.write("2- Lancement de l'app Streamlit... ✅")
-        df_lieux = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/lieux.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
-        st.write("3- Lancement de l'app Streamlit... ✅")
-        df_usagers= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/usagers.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
-        st.write("4- Lancement de l'app Streamlit... ✅")
-        df_vehicules= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/vehicules.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
-        # df_description_variables = pd.read_excel(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx").content))
-        st.write("5- Lancement de l'app Streamlit... ✅")
-        df_description_variables = pd.read_excel("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx",engine="openpyxl")
-        st.write("6- Lancement de l'app Streamlit... ✅")
-        df_accidents = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv").content))
-        st.write("7- Lancement de l'app Streamlit... ✅")
-        return df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents
-    st.write("8- Lancement de l'app Streamlit... ✅")
+        try :
+            st.write("Chargement : df_caracteristiques")
+            df_caracteristiques = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+            st.write("Chargement : df_lieux")
+            df_lieux = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/lieux.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+            st.write("Chargement : df_usagers")
+            df_usagers= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/usagers.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+            st.write("Chargement : df_vehicules")
+            df_vehicules= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/vehicules.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+            # df_description_variables = pd.read_excel(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx").content))
+            st.write("Chargement : df_description_variables")
+            df_description_variables = pd.read_excel("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx",engine="openpyxl")
+            st.write("Chargement : df_accidents")
+            df_accidents = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv").content))
+            return df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents
+        except Exception as e:
+            st.error(f"Erreur lors du chargement des datasets : {e}")
+            st.text(traceback.format_exc())
+            return None, None, None, None, None, None
+
     df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents = charger_datasets()
-    st.write("9- Lancement de l'app Streamlit... ✅")
     #Configuration bandeau gauche de la page
         #Sommaire et navigation
     st.sidebar.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/DataScientest.png")
