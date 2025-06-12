@@ -40,16 +40,21 @@ try :
     @st.cache_data 
     def charger_datasets():
         df_caracteristiques = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+        st.write("2- Lancement de l'app Streamlit... ✅")
         df_lieux = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/lieux.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+        st.write("3- Lancement de l'app Streamlit... ✅")
         df_usagers= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/usagers.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+        st.write("4- Lancement de l'app Streamlit... ✅")
         df_vehicules= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/vehicules.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
         # df_description_variables = pd.read_excel(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx").content))
+        st.write("5- Lancement de l'app Streamlit... ✅")
         df_description_variables = pd.read_excel("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx",engine="openpyxl")
+        st.write("6- Lancement de l'app Streamlit... ✅")
         df_accidents = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv").content))
         return df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents
 
     df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents = charger_datasets()
-    st.write("2- Lancement de l'app Streamlit... ✅")
+    
     #Configuration bandeau gauche de la page
         #Sommaire et navigation
     st.sidebar.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/DataScientest.png")
