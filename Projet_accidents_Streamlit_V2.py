@@ -39,18 +39,12 @@ try :
     @st.cache_data 
     def charger_datasets():
         try :
-            st.write("Chargement : df_caracteristiques")
             df_caracteristiques = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/accidents.csv").content),sep=";", encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
-            st.write("Chargement : df_lieux")
             df_lieux = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/lieux.csv").content),sep=";", encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
-            st.write("Chargement : df_usagers")
             df_usagers= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/usagers.csv").content),sep=";", encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
-            st.write("Chargement : df_vehicules")
             df_vehicules= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/vehicules.csv").content),sep=";", encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
             # df_description_variables = pd.read_excel(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx").content))
-            st.write("Chargement : df_description_variables")
             df_description_variables = pd.read_excel("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx",engine="openpyxl")
-            st.write("Chargement : df_accidents")
             df_accidents = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/accidents.csv").content),sep=";")
             return df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents
         except Exception as e:
