@@ -40,18 +40,18 @@ try :
     def charger_datasets():
         try :
             st.write("Chargement : df_caracteristiques")
-            df_caracteristiques = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+            df_caracteristiques = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/accidents.csv").content),sep=";", encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
             st.write("Chargement : df_lieux")
-            df_lieux = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/lieux.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+            df_lieux = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/lieux.csv").content),sep=";", encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
             st.write("Chargement : df_usagers")
-            df_usagers= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/usagers.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+            df_usagers= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/usagers.csv").content),sep=";", encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
             st.write("Chargement : df_vehicules")
-            df_vehicules= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/vehicules.csv").content), encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
+            df_vehicules= pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/vehicules.csv").content),sep=";", encoding = "ISO-8859-1", low_memory=False, header=0, index_col=0)
             # df_description_variables = pd.read_excel(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx").content))
             st.write("Chargement : df_description_variables")
             df_description_variables = pd.read_excel("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx",engine="openpyxl")
             st.write("Chargement : df_accidents")
-            df_accidents = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv").content))
+            df_accidents = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/accidents.csv").content),sep=";")
             return df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents
         except Exception as e:
             st.error(f"Erreur lors du chargement des datasets : {e}")
@@ -1232,11 +1232,11 @@ try :
             model_DT_7 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/DT_7.joblib"
             model_DT_8 = r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/DT_8.joblib"
 
-            # cat Boost
-            model_CBC_I500=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I500.joblib"
-            model_CBC_I500_LR_01=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I500_LR0.1.joblib"
-            model_CBC_I1000_LR_001=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I1000_LR0.01.joblib"
-            model_CBC_I1000_LR_001_D5=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I1000_LR0.01_D5.joblib"
+            # # cat Boost
+            # model_CBC_I500=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I500.joblib"
+            # model_CBC_I500_LR_01=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I500_LR0.1.joblib"
+            # model_CBC_I1000_LR_001=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I1000_LR0.01.joblib"
+            # model_CBC_I1000_LR_001_D5=r"https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Joblibs/CBC_I1000_LR0.01_D5.joblib"
 
             # Fonction pour charger le modèle selon le choix de l'utilisateur
             @st.cache_data 
