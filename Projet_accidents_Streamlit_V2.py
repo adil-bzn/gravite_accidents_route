@@ -51,10 +51,11 @@ try :
         df_description_variables = pd.read_excel("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Projets%20accidents%20-%20Description%20des%20variables.xlsx",engine="openpyxl")
         st.write("6- Lancement de l'app Streamlit... ✅")
         df_accidents = pd.read_csv(BytesIO(requests.get("https://github.com/Kaalinodi57/accidents-routes-cda/raw/refs/heads/main/Datas/accidents.csv").content))
+        st.write("7- Lancement de l'app Streamlit... ✅")
         return df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents
-
+    st.write("8- Lancement de l'app Streamlit... ✅")
     df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents = charger_datasets()
-    
+    st.write("9- Lancement de l'app Streamlit... ✅")
     #Configuration bandeau gauche de la page
         #Sommaire et navigation
     st.sidebar.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/DataScientest.png")
