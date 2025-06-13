@@ -55,7 +55,6 @@ try :
     df_caracteristiques, df_lieux, df_usagers, df_vehicules, df_description_variables, df_accidents = charger_datasets()
     #Configuration bandeau gauche de la page
         #Sommaire et navigation
-    st.sidebar.image("https://raw.githubusercontent.com/Kaalinodi57/accidents-routes-cda/refs/heads/main/Images/DataScientest.png")
     st.sidebar.title("Sommaire")
     pages=["Introduction & Exploration", "Data Visualisation", "Pre-processing", "Modélisation", "Conclusion"]
     page=st.sidebar.radio("Aller vers", pages)
