@@ -62,8 +62,6 @@ try :
         #Auteurs
     st.sidebar.title("Auteurs :")
     st.sidebar.write("Adil Bouziane")
-    st.sidebar.write("Malika Sadki")
-    st.sidebar.write("Anouar Ouro-Sao")
 
     if page == pages[0] :
 
